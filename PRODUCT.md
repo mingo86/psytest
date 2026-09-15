@@ -21,7 +21,7 @@ Pubblico generico che arriva da un link condiviso in chat o sui social. Lo compi
 - **Modulo 01 · ECR-R** (Experiences in Close Relationships – Revised, Fraley, Waller & Brennan 2000): 36 affermazioni su scala 1–7, due dimensioni continue (Ansia ed Evitamento), lettura del profilo più vicino (sicuro / preoccupato / distanziante / timoroso) e un consiglio.
 - **Modulo 02 · AAQ-II** (Acceptance and Action Questionnaire – II, Bond, Hayes et al. 2011; versione italiana Pennato, Berrocal, Bernini & Rivas 2013, item forniti dall'utente): 7 affermazioni su scala 1–7 (mai vera – sempre vera), somma 7–49 di evitamento esperienziale, fasce di ricerca (≤17 basso, 18–23 media, >24 disagio rilevante, >28 probabile disturbo), profilo dei 7 item.
 
-Altri moduli potranno aggiungersi con lo stesso motore. Successo = il test viene finito, il risultato viene capito senza gergo e viene condiviso con un link.
+Dal 15 set 2026 il plico comprende anche (pagina generica `test.html?t=…`): RQ, ERQ, SCS-SF, UCLA-3, WHO-5, SWLS, PSS-10, RSES, OLBI, CFQ, Mini-IPIP, SD3, IPS, PHQ-9, GAD-7, DASS-21 — tutti di pubblico dominio o liberi per uso non commerciale, IT (validata dove esiste, altrimenti propria) + EN; le altre lingue mostrano le domande in inglese. PHQ-9, GAD-7 e DASS-21 sono marcati `sensitive` e mostrano un box di aiuto con numeri utili. Successo = il test viene finito, il risultato viene capito senza gergo e viene condiviso con un link.
 
 ## Positioning
 
@@ -38,7 +38,7 @@ Ogni questionario è quello scientifico completo (item originali, scoring uffici
 
 - ECR-R, 36 item: EN originali (pubblico dominio), IT/FR/ES/PT/DE traduzioni proprie non validate. Scoring: media per dimensione, invertiti 9, 11, 20, 22, 26–31, 33–36; norme M/SD 3,56/1,12 (ansia) e 2,92/1,19 (evitamento); percentile via normale; soglia profilo = media del campione (Fraley suggerisce lo split sulla mediana, non disponibile).
 - AAQ-II, 7 item: IT = versione validata Pennato et al. 2013, EN = originale Bond et al. 2011, FR/ES/PT/DE traduzioni proprie non validate. Scoring: somma 7–49, nessun item invertito; soglie 24 e 28 sono di ricerca, non diagnostiche; media popolazione generale ~18–20.
-- Motore condiviso `psy/sheet.js` + stylesheet `psy/sheet.css`: ogni modulo è una pagina che passa item, testi UI, scoring e render del referto.
+- Motore condiviso `psy/app.js` (una domanda per schermata, K opzioni) + `psy/generic.js` (scoring e render da definizione) + `psy/app.css`.
 - Uso **gratuito e non commerciale** (confermato dall'utente): l'ECR-R è di pubblico dominio solo per uso non commerciale; qualsiasi monetizzazione richiede permesso agli autori.
 - Font da Google Fonts consentiti; nessun asset esterno oltre a quello.
 - Non è uno strumento diagnostico: il disclaimer resta sempre visibile nel risultato.

@@ -3,19 +3,21 @@
 Sito statico a sé (non linkato dallo Zodiac né dall'Ologenetica): un **plico di questionari psicologici validati**, compilati e calcolati sul dispositivo, in 6 lingue (IT/EN/FR/ES/PT-BR/DE). Mondo visivo: **app moderna** — gradiente indaco→rosa (teal per il test 2), card bianche, una domanda per schermata con risposte per esteso, barra di avanzamento, risultato con anello/chip/barre, box di condivisione. Vedi `PRODUCT.md` e `DESIGN.md`.
 
 ## Pagine
-- `index.html` — hub: le card dei test
-- `ecr-r.html` — Test 1 · ECR-R, stile di attaccamento (Fraley, Waller & Brennan 2000): 36 item, Ansia/Evitamento, percentile vs campione online, mappa dei 4 profili
-- `aaq-ii.html` — Test 2 · AAQ-II, flessibilità psicologica (Bond et al. 2011; IT Pennato et al. 2013): 7 item, somma 7–49, fasce di ricerca, profilo dei 7 item
+- `index.html` — hub a gruppi: Relazioni ed emozioni · Benessere e stress · Mente e personalità · Umore e ansia (screening)
+- `ecr-r.html` — ECR-R (36 item, 6 lingue, pagina dedicata con mappa dei profili)
+- `aaq-ii.html` — AAQ-II (7 item, 6 lingue, pagina dedicata)
+- `test.html?t=<id>` — pagina generica per tutti gli altri test (definizione in `tests/<id>.js`): rq, erq, scssf, ucla3, who5, swls, pss10, rses, olbi, cfq, miniipip, sd3, ips, phq9, gad7, dass21
 
-Ogni risultato ha il box **«Condividi il tuo risultato»**: `?r=<cifre 1-7>&run=1&lang=xx` ricostruisce esattamente il risultato; copia link, condivisione di sistema, WhatsApp, Telegram, email.
+Ogni risultato ha il box **«Condividi il tuo risultato»**: `?r=<cifre>&run=1&lang=xx` (più `t=` per i test generici) ricostruisce esattamente il risultato; copia link, condivisione di sistema, WhatsApp, Telegram, email. I test di screening (PHQ-9, GAD-7, DASS-21) mostrano un box di aiuto con numeri utili.
 
 ## Struttura
 - `psy/app.css` — stile (token, card, opzioni, risultato, condivisione)
+- `psy/generic.js` — pagina generica: carica `tests/<id>.js`, scoring (valori, item invertiti, sottoscale somma/media/×k, fasce) e render (punteggio grande + scala a fasce, profilo per sottoscala, `pick` per il profilo prevalente, come si legge, citazione)
 - `psy/app.js` — motore condiviso (intro → una domanda per schermata → risultato): `PSY.mount({code, n, order?, items(L), labels(L), ui(L), score(answers), render(res, L, answers)})`
-- `tests/ecrr.js`, `tests/aaq.js` — item (EN originali, IT validato per AAQ-II, altre lingue tradotte non validate), testi dei risultati, norme, scoring
+- `tests/*.js` — definizioni: `{code, theme, sensitive, n, values, reverse, labels:{L}, items:{L}, text:{L}, scales:[…], main}`; IT + EN obbligatorie, le altre lingue ricadono su EN. `tests/ecrr.js`, `tests/aaq.js` — item (EN originali, IT validato per AAQ-II, altre lingue tradotte non validate), testi dei risultati, norme, scoring
 - `lang/i18n.js` — selettore lingua (da zodiac-zine, senza CSS iniettato)
 
-Per aggiungere un modulo: un file dati in `tests/`, una pagina che chiama `PSY.mount`, una riga nell'hub.
+Per aggiungere un test: un file `tests/<id>.js` nel formato sopra e una card nel registro `REG` di `index.html`. Localmente `serve` fa redirect a URL senza `.html` perdendo la query: per provare usa `/test?t=<id>`.
 
 ## Licenze
 Strumenti di pubblico dominio **per uso non commerciale**; l'uso commerciale richiede il permesso degli autori. Non sono strumenti diagnostici.

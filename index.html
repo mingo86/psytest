@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>psytest</title>
-<meta name="description" content="Test psicologici validati, calcolati sul tuo dispositivo: stile di attaccamento (ECR-R) e flessibilità psicologica (AAQ-II). Risultato condivisibile con un link.">
+<meta name="description" content="Test psicologici validati, calcolati sul tuo dispositivo, con risultato condivisibile: attaccamento, personalità, benessere, stress, umore.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 <body>
 <div class="top"><a class="brand" href="index.html">psytest</a><span id="langPick"></span></div>
 <div class="hero"><h1 id="title"></h1><p id="lede"></p></div>
-<main class="tests" id="tests"></main>
+<div id="groups"></div>
 <section class="how"><div class="card"><h2 id="howT"></h2><ol id="how"></ol></div></section>
 <p class="foot" id="foot"></p>
 
@@ -23,42 +23,73 @@
 (function(){
   const $=id=>document.getElementById(id);
   const UI={
-    it:{title:"Test psicologici, fatti bene",lede:"Strumenti validati dalla ricerca, con le domande originali e il punteggio ufficiale. Tutto calcolato sul tuo telefono, risultato condivisibile con un link.",
-      tests:[{h:"ecr-r.html",k:"Test 1 · Attaccamento",t:"Come ami, davvero?",d:"Quanto temi di perdere l'altro e quanto ti è comodo appoggiarti: ansia ed evitamento, con la mappa dei quattro profili. Il test ECR-R.",m:["36 domande","~6 min"],b:"Inizia"},
-             {h:"aaq-ii.html",k:"Test 2 · Flessibilità",t:"Quanto ti pesano le emozioni?",d:"Quanto emozioni, ricordi e preoccupazioni ti ostacolano: l'evitamento esperienziale del modello ACT, con le soglie di ricerca. Il test AAQ-II.",m:["7 domande","~2 min"],b:"Inizia",theme:"teal"}],
+    it:{title:"Test psicologici, fatti bene",lede:"Strumenti validati dalla ricerca, con le domande originali e il punteggio ufficiale. Tutto calcolato sul tuo telefono, risultato condivisibile con un link.",start:"Inizia",q:"domande",min:"min",
       howT:"Come funziona",how:["Ogni test è il questionario completo, nella forma e con lo scoring pubblicati dagli autori; il confronto è con i campioni di riferimento della letteratura.","Tutto viene calcolato sul tuo dispositivo: nessun account, nessun invio. Le risposte esistono solo nel link che scegli di creare alla fine, e quel link ricostruisce esattamente il risultato.","Sono strumenti di auto-esplorazione, non diagnosi. Se un risultato ti pesa, parlarne con un professionista è la mossa sensata."],
-      foot:"ECR-R: Fraley, Waller & Brennan (2000). AAQ-II: Bond, Hayes et al. (2011); versione italiana Pennato et al. (2013). Strumenti di pubblico dominio per uso non commerciale; le traduzioni FR/ES/PT/DE sono proprie e non validate."},
-    en:{title:"Psychological tests, done properly",lede:"Research-validated instruments with the original questions and official scoring. Everything computed on your phone, result shareable with a link.",
-      tests:[{h:"ecr-r.html",k:"Test 1 · Attachment",t:"How do you really love?",d:"How much you fear losing the other and how comfortable you are leaning on them: anxiety and avoidance, with the map of the four profiles. The ECR-R test.",m:["36 questions","~6 min"],b:"Start"},
-             {h:"aaq-ii.html",k:"Test 2 · Flexibility",t:"How much do your emotions weigh on you?",d:"How much emotions, memories and worries get in your way: experiential avoidance from the ACT model, with research thresholds. The AAQ-II test.",m:["7 questions","~2 min"],b:"Start",theme:"teal"}],
+      foot:"Tutti gli strumenti sono di pubblico dominio o liberi per uso non commerciale, citati in ogni pagina. Le versioni italiane sono quelle validate dove esistono (AAQ-II, PHQ-9, GAD-7, WHO-5, RSES, SWLS, PSS-10, ERQ, CFQ) e traduzioni proprie altrove; FR/ES/PT/DE sono disponibili per ECR-R e AAQ-II, gli altri test mostrano le domande in inglese."},
+    en:{title:"Psychological tests, done properly",lede:"Research-validated instruments with the original questions and official scoring. Everything computed on your phone, result shareable with a link.",start:"Start",q:"questions",min:"min",
       howT:"How it works",how:["Each test is the complete questionnaire, in the form and with the scoring published by its authors; the comparison is with the reference samples in the literature.","Everything is computed on your device: no account, nothing sent. Your answers exist only in the link you choose to create at the end, and that link rebuilds the exact result.","These are self-exploration tools, not diagnoses. If a result weighs on you, talking to a professional is the sensible move."],
-      foot:"ECR-R: Fraley, Waller & Brennan (2000). AAQ-II: Bond, Hayes et al. (2011); Italian version Pennato et al. (2013). Public-domain instruments for non-commercial use; FR/ES/PT/DE translations are our own and not validated."},
-    fr:{title:"Des tests psychologiques, faits comme il faut",lede:"Des outils validés par la recherche, avec les questions originales et le score officiel. Tout est calculé sur ton téléphone, résultat partageable par un lien.",
-      tests:[{h:"ecr-r.html",k:"Test 1 · Attachement",t:"Comment tu aimes, vraiment ?",d:"À quel point tu crains de perdre l'autre et à quel point tu es à l'aise pour t'appuyer sur lui : anxiété et évitement, avec la carte des quatre profils. Le test ECR-R.",m:["36 questions","~6 min"],b:"Commencer"},
-             {h:"aaq-ii.html",k:"Test 2 · Flexibilité",t:"À quel point tes émotions te pèsent ?",d:"À quel point les émotions, les souvenirs et les inquiétudes te font obstacle : l'évitement expérientiel du modèle ACT, avec les seuils de recherche. Le test AAQ-II.",m:["7 questions","~2 min"],b:"Commencer",theme:"teal"}],
-      howT:"Comment ça marche",how:["Chaque test est le questionnaire complet, dans la forme et avec le score publiés par ses auteurs ; la comparaison se fait avec les échantillons de référence de la littérature.","Tout est calculé sur ton appareil : pas de compte, rien d'envoyé. Tes réponses n'existent que dans le lien que tu choisis de créer à la fin, et ce lien reconstruit exactement le résultat.","Ce sont des outils d'auto-exploration, pas des diagnostics. Si un résultat te pèse, en parler à un professionnel est la démarche sensée."],
-      foot:"ECR-R : Fraley, Waller & Brennan (2000). AAQ-II : Bond, Hayes et al. (2011) ; version italienne Pennato et al. (2013). Instruments du domaine public pour usage non commercial ; les traductions FR/ES/PT/DE sont les nôtres et non validées."},
-    es:{title:"Tests psicológicos, hechos como es debido",lede:"Instrumentos validados por la investigación, con las preguntas originales y la puntuación oficial. Todo se calcula en tu teléfono, resultado compartible con un enlace.",
-      tests:[{h:"ecr-r.html",k:"Test 1 · Apego",t:"¿Cómo amas, de verdad?",d:"Cuánto temes perder al otro y cuánto te resulta cómodo apoyarte: ansiedad y evitación, con el mapa de los cuatro perfiles. El test ECR-R.",m:["36 preguntas","~6 min"],b:"Empezar"},
-             {h:"aaq-ii.html",k:"Test 2 · Flexibilidad",t:"¿Cuánto te pesan las emociones?",d:"Cuánto te obstaculizan las emociones, los recuerdos y las preocupaciones: la evitación experiencial del modelo ACT, con los umbrales de investigación. El test AAQ-II.",m:["7 preguntas","~2 min"],b:"Empezar",theme:"teal"}],
-      howT:"Cómo funciona",how:["Cada test es el cuestionario completo, en la forma y con la puntuación publicadas por sus autores; la comparación es con las muestras de referencia de la literatura.","Todo se calcula en tu dispositivo: sin cuenta, sin envíos. Tus respuestas existen solo en el enlace que decidas crear al final, y ese enlace reconstruye exactamente el resultado.","Son herramientas de autoexploración, no diagnósticos. Si un resultado te pesa, hablarlo con un profesional es lo sensato."],
-      foot:"ECR-R: Fraley, Waller & Brennan (2000). AAQ-II: Bond, Hayes et al. (2011); versión italiana Pennato et al. (2013). Instrumentos de dominio público para uso no comercial; las traducciones FR/ES/PT/DE son propias y no validadas."},
-    pt:{title:"Testes psicológicos, feitos como se deve",lede:"Instrumentos validados pela pesquisa, com as perguntas originais e a pontuação oficial. Tudo calculado no seu celular, resultado compartilhável por link.",
-      tests:[{h:"ecr-r.html",k:"Teste 1 · Apego",t:"Como você ama, de verdade?",d:"Quanto você teme perder o outro e quanto se sente à vontade para se apoiar: ansiedade e evitação, com o mapa dos quatro perfis. O teste ECR-R.",m:["36 perguntas","~6 min"],b:"Começar"},
-             {h:"aaq-ii.html",k:"Teste 2 · Flexibilidade",t:"Quanto as emoções pesam para você?",d:"Quanto emoções, lembranças e preocupações atrapalham você: a evitação experiencial do modelo ACT, com os limiares de pesquisa. O teste AAQ-II.",m:["7 perguntas","~2 min"],b:"Começar",theme:"teal"}],
-      howT:"Como funciona",how:["Cada teste é o questionário completo, na forma e com a pontuação publicadas pelos autores; a comparação é com as amostras de referência da literatura.","Tudo é calculado no seu dispositivo: sem conta, sem envio. Suas respostas existem só no link que você escolher criar no fim, e esse link reconstrói exatamente o resultado.","São ferramentas de autoexploração, não diagnósticos. Se um resultado pesa, conversar com um profissional é o passo sensato."],
-      foot:"ECR-R: Fraley, Waller & Brennan (2000). AAQ-II: Bond, Hayes et al. (2011); versão italiana Pennato et al. (2013). Instrumentos de domínio público para uso não comercial; as traduções FR/ES/PT/DE são próprias e não validadas."},
-    de:{title:"Psychologische Tests, richtig gemacht",lede:"Von der Forschung validierte Instrumente mit den Originalfragen und der offiziellen Auswertung. Alles auf deinem Handy berechnet, Ergebnis per Link teilbar.",
-      tests:[{h:"ecr-r.html",k:"Test 1 · Bindung",t:"Wie liebst du wirklich?",d:"Wie sehr du fürchtest, den anderen zu verlieren, und wie leicht du dich anlehnen kannst: Angst und Vermeidung, mit der Karte der vier Profile. Der ECR-R-Test.",m:["36 Fragen","~6 Min."],b:"Starten"},
-             {h:"aaq-ii.html",k:"Test 2 · Flexibilität",t:"Wie sehr belasten dich deine Gefühle?",d:"Wie sehr Gefühle, Erinnerungen und Sorgen dir im Weg stehen: Erlebnisvermeidung aus dem ACT-Modell, mit Forschungsschwellen. Der AAQ-II-Test.",m:["7 Fragen","~2 Min."],b:"Starten",theme:"teal"}],
-      howT:"So funktioniert es",how:["Jeder Test ist der vollständige Fragebogen, in der Form und mit der Auswertung, die die Autoren veröffentlicht haben; verglichen wird mit den Referenzstichproben der Literatur.","Alles wird auf deinem Gerät berechnet: kein Konto, nichts wird gesendet. Deine Antworten existieren nur im Link, den du am Ende erstellen möchtest, und dieser Link stellt genau das Ergebnis wieder her.","Das sind Werkzeuge zur Selbsterkundung, keine Diagnosen. Wenn dich ein Ergebnis belastet, ist ein Gespräch mit einer Fachperson der vernünftige Schritt."],
-      foot:"ECR-R: Fraley, Waller & Brennan (2000). AAQ-II: Bond, Hayes et al. (2011); italienische Version Pennato et al. (2013). Gemeinfreie Instrumente für nicht-kommerzielle Nutzung; die Übersetzungen FR/ES/PT/DE sind unsere eigenen und nicht validiert."}
+      foot:"All instruments are public domain or free for non-commercial use, cited on each page. Italian versions are the validated ones where they exist and our own translations elsewhere; FR/ES/PT/DE are available for ECR-R and AAQ-II, the other tests show questions in English."},
+    fr:{title:"Des tests psychologiques, faits comme il faut",lede:"Des outils validés par la recherche, avec les questions originales et le score officiel. Tout est calculé sur ton téléphone, résultat partageable par un lien.",start:"Commencer",q:"questions",min:"min",howT:"Comment ça marche",how:["Chaque test est le questionnaire complet, dans la forme et avec le score publiés par ses auteurs.","Tout est calculé sur ton appareil : pas de compte, rien d'envoyé. Tes réponses n'existent que dans le lien que tu choisis de créer à la fin.","Ce sont des outils d'auto-exploration, pas des diagnostics. Si un résultat te pèse, en parler à un professionnel est la démarche sensée."],foot:"Instruments du domaine public ou libres pour usage non commercial, cités sur chaque page. FR disponible pour ECR-R et AAQ-II ; les autres tests affichent les questions en anglais."},
+    es:{title:"Tests psicológicos, hechos como es debido",lede:"Instrumentos validados por la investigación, con las preguntas originales y la puntuación oficial. Todo se calcula en tu teléfono, resultado compartible con un enlace.",start:"Empezar",q:"preguntas",min:"min",howT:"Cómo funciona",how:["Cada test es el cuestionario completo, en la forma y con la puntuación publicadas por sus autores.","Todo se calcula en tu dispositivo: sin cuenta, sin envíos. Tus respuestas existen solo en el enlace que decidas crear al final.","Son herramientas de autoexploración, no diagnósticos. Si un resultado te pesa, hablarlo con un profesional es lo sensato."],foot:"Instrumentos de dominio público o libres para uso no comercial, citados en cada página. ES disponible para ECR-R y AAQ-II; los demás tests muestran las preguntas en inglés."},
+    pt:{title:"Testes psicológicos, feitos como se deve",lede:"Instrumentos validados pela pesquisa, com as perguntas originais e a pontuação oficial. Tudo calculado no seu celular, resultado compartilhável por link.",start:"Começar",q:"perguntas",min:"min",howT:"Como funciona",how:["Cada teste é o questionário completo, na forma e com a pontuação publicadas pelos autores.","Tudo é calculado no seu dispositivo: sem conta, sem envio. Suas respostas existem só no link que você escolher criar no fim.","São ferramentas de autoexploração, não diagnósticos. Se um resultado pesa, conversar com um profissional é o passo sensato."],foot:"Instrumentos de domínio público ou livres para uso não comercial, citados em cada página. PT disponível para ECR-R e AAQ-II; os outros testes mostram as perguntas em inglês."},
+    de:{title:"Psychologische Tests, richtig gemacht",lede:"Von der Forschung validierte Instrumente mit den Originalfragen und der offiziellen Auswertung. Alles auf deinem Handy berechnet, Ergebnis per Link teilbar.",start:"Starten",q:"Fragen",min:"Min.",howT:"So funktioniert es",how:["Jeder Test ist der vollständige Fragebogen, in der Form und mit der Auswertung, die die Autoren veröffentlicht haben.","Alles wird auf deinem Gerät berechnet: kein Konto, nichts wird gesendet. Deine Antworten existieren nur im Link, den du am Ende erstellen möchtest.","Das sind Werkzeuge zur Selbsterkundung, keine Diagnosen. Wenn dich ein Ergebnis belastet, ist ein Gespräch mit einer Fachperson der vernünftige Schritt."],foot:"Gemeinfreie oder für nicht-kommerzielle Nutzung freie Instrumente, auf jeder Seite zitiert. DE verfügbar für ECR-R und AAQ-II; die anderen Tests zeigen die Fragen auf Englisch."}
+  };
+  // registro dei test: h = pagina, n = domande, m = minuti
+  const REG={
+    it:[
+      {h:"Relazioni ed emozioni",sub:"Come ami, come gestisci quello che provi, come ti tratti.",tests:[
+        {h:"ecr-r.html",k:"ECR-R · Attaccamento",t:"Come ami, davvero?",d:"Ansia ed evitamento nelle relazioni, con la mappa dei quattro profili. Il test di riferimento.",n:36,m:6},
+        {h:"test.html?t=rq",k:"RQ · Attaccamento in 4 profili",t:"Quale descrizione ti somiglia?",d:"Le quattro descrizioni di Bartholomew: il complemento veloce dell'ECR-R.",n:4,m:1},
+        {h:"test.html?t=erq",k:"ERQ · Regolazione emotiva",t:"Come gestisci le emozioni?",d:"Rivalutazione o soppressione: le due strategie di Gross.",n:10,m:2,theme:"rose"},
+        {h:"test.html?t=scssf",k:"SCS-SF · Auto-compassione",t:"Come ti tratti quando sbagli?",d:"Gentilezza, umanità condivisa e presenza mentale, contro autocritica e isolamento.",n:12,m:2,theme:"rose"},
+        {h:"test.html?t=ucla3",k:"UCLA-3 · Solitudine",t:"Quanto ti senti solo?",d:"Tre domande usate nei grandi studi sulla salute.",n:3,m:1,theme:"ocean"}]},
+      {h:"Benessere e stress",sub:"Come stai, quanto sei sotto pressione, quanto ti pesa il lavoro.",tests:[
+        {h:"test.html?t=who5",k:"WHO-5 · Benessere",t:"Come sono andate le ultime due settimane?",d:"L'indice di benessere dell'OMS, 5 domande.",n:5,m:1,theme:"sun"},
+        {h:"test.html?t=swls",k:"SWLS · Soddisfazione",t:"Quanto sei soddisfatto della tua vita?",d:"Il giudizio complessivo sulla tua vita, secondo Diener.",n:5,m:1,theme:"sun"},
+        {h:"test.html?t=pss10",k:"PSS-10 · Stress",t:"Quanto ti senti sotto pressione?",d:"Quanto la vita è sembrata imprevedibile e sovraccarica nell'ultimo mese.",n:10,m:2,theme:"ocean"},
+        {h:"test.html?t=rses",k:"RSES · Autostima",t:"Quanto ti stimi?",d:"La scala di Rosenberg, la misura di autostima più usata al mondo.",n:10,m:1,theme:"sun"},
+        {h:"test.html?t=olbi",k:"OLBI · Burnout",t:"Quanto ti sta consumando il lavoro?",d:"Esaurimento e disimpegno: le due facce del burnout.",n:16,m:3,theme:"ocean"}]},
+      {h:"Mente e personalità",sub:"Come funzionano i tuoi pensieri e chi sei, in tratti.",tests:[
+        {h:"aaq-ii.html",k:"AAQ-II · Flessibilità",t:"Quanto ti pesano le emozioni?",d:"L'evitamento esperienziale del modello ACT, con le soglie di ricerca.",n:7,m:2,theme:"teal"},
+        {h:"test.html?t=cfq",k:"CFQ · Fusione cognitiva",t:"Quanto ti credono i tuoi pensieri?",d:"Quanto resti intrappolato nei pensieri: il gemello dell'AAQ-II.",n:7,m:1,theme:"teal"},
+        {h:"test.html?t=miniipip",k:"Mini-IPIP · Big Five",t:"Che personalità hai?",d:"I cinque grandi tratti in 20 domande di pubblico dominio.",n:20,m:3,theme:"plum"},
+        {h:"test.html?t=sd3",k:"SD3 · Triade oscura",t:"Quanto sei «oscuro»?",d:"Machiavellismo, narcisismo e psicopatia, in versione non clinica.",n:27,m:4,theme:"slate"},
+        {h:"test.html?t=ips",k:"IPS · Procrastinazione",t:"Quanto rimandi?",d:"La procrastinazione irrazionale secondo Piers Steel.",n:9,m:1,theme:"plum"}]},
+      {h:"Umore e ansia · screening",sub:"Questionari usati dai medici per capire se vale la pena parlarne. Non sono diagnosi; se stai male, chiedi aiuto oggi.",tests:[
+        {h:"test.html?t=phq9",k:"PHQ-9 · Umore",t:"Come va l'umore, nelle ultime due settimane?",d:"Lo screening per la depressione più usato nella medicina di base.",n:9,m:2,theme:"slate"},
+        {h:"test.html?t=gad7",k:"GAD-7 · Ansia",t:"Quanta ansia, nelle ultime due settimane?",d:"Lo screening per l'ansia generalizzata usato in tutto il mondo.",n:7,m:1,theme:"slate"},
+        {h:"test.html?t=dass21",k:"DASS-21 · Tre scale",t:"Com'è andata l'ultima settimana?",d:"Depressione, ansia e stress con le soglie di gravità pubblicate.",n:21,m:4,theme:"slate"}]}
+    ],
+    en:[
+      {h:"Relationships and emotions",sub:"How you love, how you handle what you feel, how you treat yourself.",tests:[
+        {h:"ecr-r.html",k:"ECR-R · Attachment",t:"How do you really love?",d:"Anxiety and avoidance in relationships, with the map of the four profiles. The reference test.",n:36,m:6},
+        {h:"test.html?t=rq",k:"RQ · Attachment in 4 profiles",t:"Which description sounds like you?",d:"Bartholomew's four descriptions: the quick companion to the ECR-R.",n:4,m:1},
+        {h:"test.html?t=erq",k:"ERQ · Emotion regulation",t:"How do you handle your emotions?",d:"Reappraisal or suppression: Gross's two strategies.",n:10,m:2,theme:"rose"},
+        {h:"test.html?t=scssf",k:"SCS-SF · Self-compassion",t:"How do you treat yourself when you fail?",d:"Kindness, common humanity and mindfulness, versus self-judgement and isolation.",n:12,m:2,theme:"rose"},
+        {h:"test.html?t=ucla3",k:"UCLA-3 · Loneliness",t:"How lonely do you feel?",d:"Three questions used in large health studies.",n:3,m:1,theme:"ocean"}]},
+      {h:"Well-being and stress",sub:"How you are, how much pressure you are under, how much work weighs on you.",tests:[
+        {h:"test.html?t=who5",k:"WHO-5 · Well-being",t:"How have the last two weeks been?",d:"The WHO well-being index, 5 questions.",n:5,m:1,theme:"sun"},
+        {h:"test.html?t=swls",k:"SWLS · Life satisfaction",t:"How satisfied are you with your life?",d:"Your overall judgement of your life, after Diener.",n:5,m:1,theme:"sun"},
+        {h:"test.html?t=pss10",k:"PSS-10 · Stress",t:"How much pressure are you under?",d:"How unpredictable and overloaded life has felt over the last month.",n:10,m:2,theme:"ocean"},
+        {h:"test.html?t=rses",k:"RSES · Self-esteem",t:"How much do you value yourself?",d:"The Rosenberg scale, the most used measure of self-esteem.",n:10,m:1,theme:"sun"},
+        {h:"test.html?t=olbi",k:"OLBI · Burnout",t:"How much is work wearing you down?",d:"Exhaustion and disengagement: the two faces of burnout.",n:16,m:3,theme:"ocean"}]},
+      {h:"Mind and personality",sub:"How your thoughts work and who you are, in traits.",tests:[
+        {h:"aaq-ii.html",k:"AAQ-II · Flexibility",t:"How much do your emotions weigh on you?",d:"Experiential avoidance from the ACT model, with research thresholds.",n:7,m:2,theme:"teal"},
+        {h:"test.html?t=cfq",k:"CFQ · Cognitive fusion",t:"How much do your thoughts run you?",d:"How entangled you get in your thoughts: the AAQ-II's twin.",n:7,m:1,theme:"teal"},
+        {h:"test.html?t=miniipip",k:"Mini-IPIP · Big Five",t:"What is your personality like?",d:"The five big traits in 20 public-domain questions.",n:20,m:3,theme:"plum"},
+        {h:"test.html?t=sd3",k:"SD3 · Dark triad",t:"How “dark” are you?",d:"Machiavellianism, narcissism and psychopathy, non-clinical version.",n:27,m:4,theme:"slate"},
+        {h:"test.html?t=ips",k:"IPS · Procrastination",t:"How much do you put things off?",d:"Irrational procrastination after Piers Steel.",n:9,m:1,theme:"plum"}]},
+      {h:"Mood and anxiety · screening",sub:"Questionnaires clinicians use to see whether it is worth talking about. Not diagnoses; if you are struggling, ask for help today.",tests:[
+        {h:"test.html?t=phq9",k:"PHQ-9 · Mood",t:"How has your mood been, over the last two weeks?",d:"The most used depression screening in primary care.",n:9,m:2,theme:"slate"},
+        {h:"test.html?t=gad7",k:"GAD-7 · Anxiety",t:"How anxious, over the last two weeks?",d:"The generalised-anxiety screening used worldwide.",n:7,m:1,theme:"slate"},
+        {h:"test.html?t=dass21",k:"DASS-21 · Three scales",t:"How was the past week?",d:"Depression, anxiety and stress with published severity thresholds.",n:21,m:4,theme:"slate"}]}
+    ]
   };
   function render(){
-    const L=window.ZI18N?window.ZI18N.get():"it", u=UI[L]||UI.it;
+    const L=window.ZI18N?window.ZI18N.get():"it", u=UI[L]||UI.it, reg=REG[L]||REG.en;
     document.documentElement.lang=L;
     $("title").textContent=u.title; $("lede").textContent=u.lede;
-    $("tests").innerHTML=u.tests.map(t=>`<a class="card" href="${t.h}"${t.theme?` data-theme="${t.theme}"`:""} style="text-decoration:none;color:inherit"><span class="kicker">${t.k}</span><h2>${t.t}</h2><p>${t.d}</p><div class="meta">${t.m.map(m=>`<span>${m}</span>`).join("")}</div><span class="btn">${t.b} →</span></a>`).join("");
+    $("groups").innerHTML=reg.map(g=>`<section class="group"><h2>${g.h}</h2><p class="gsub">${g.sub}</p><div class="tests three">${g.tests.map(t=>`<a class="card" href="${t.h}"${t.theme?` data-theme="${t.theme}"`:""} style="text-decoration:none;color:inherit"><span class="kicker">${t.k}</span><h2>${t.t}</h2><p>${t.d}</p><div class="meta"><span>${t.n} ${u.q}</span><span>~${t.m} ${u.min}</span></div><span class="btn">${u.start} →</span></a>`).join("")}</div></section>`).join("");
     $("howT").textContent=u.howT; $("how").innerHTML=u.how.map(p=>`<li>${p}</li>`).join("");
     $("foot").textContent=u.foot;
     if(window.ZI18N) window.ZI18N.decorate();

@@ -14,6 +14,11 @@
   --shadow:0 24px 60px rgba(30,10,80,.35);
   --font:'Manrope',system-ui,-apple-system,Segoe UI,sans-serif;
 }
+[data-theme="sun"]{--g1:#f59e0b;--g2:#f97316;--g3:#ec4899;--acc:#ea580c;--acc2:#db2777;--acc-l:#fff7ed;--acc-l2:#fdf2f8;--acc-t:#c2410c;--acc2-t:#be185d;--soft:#fff7ed;--line:#fde8d3;--shadow:0 24px 60px rgba(120,50,0,.35)}
+[data-theme="ocean"]{--g1:#2563eb;--g2:#0ea5e9;--g3:#22d3ee;--acc:#2563eb;--acc2:#06b6d4;--acc-l:#eff6ff;--acc-l2:#ecfeff;--acc-t:#1d4ed8;--acc2-t:#0e7490;--soft:#eff6ff;--line:#dbeafe;--shadow:0 24px 60px rgba(10,40,120,.35)}
+[data-theme="rose"]{--g1:#e11d48;--g2:#f43f5e;--g3:#fb923c;--acc:#e11d48;--acc2:#f97316;--acc-l:#fff1f2;--acc-l2:#fff7ed;--acc-t:#be123c;--acc2-t:#c2410c;--soft:#fff1f2;--line:#fecdd3;--shadow:0 24px 60px rgba(120,10,40,.35)}
+[data-theme="plum"]{--g1:#7c3aed;--g2:#a21caf;--g3:#e11d48;--acc:#7c3aed;--acc2:#c026d3;--acc-l:#f5f3ff;--acc-l2:#fdf4ff;--acc-t:#6d28d9;--acc2-t:#a21caf;--soft:#f5f3ff;--line:#e9d5ff;--shadow:0 24px 60px rgba(60,10,90,.35)}
+[data-theme="slate"]{--g1:#334155;--g2:#475569;--g3:#64748b;--acc:#0f766e;--acc2:#0369a1;--acc-l:#f0fdfa;--acc-l2:#f0f9ff;--acc-t:#115e59;--acc2-t:#075985;--soft:#f1f5f9;--line:#e2e8f0;--shadow:0 24px 60px rgba(15,23,42,.45)}
 [data-theme="teal"]{--g1:#0891b2;--g2:#0d9488;--g3:#84cc16;--acc:#0d9488;--acc2:#65a30d;--acc-l:#ecfdf5;--acc-l2:#f4fce3;--acc-t:#0f766e;--acc2-t:#4d7c0f;--soft:#eefbf6;--line:#d9f2ea;--shadow:0 24px 60px rgba(4,60,50,.35)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -144,14 +149,32 @@ h1{font-size:clamp(26px,4vw,34px);letter-spacing:-.02em;line-height:1.1;margin:1
 .ico svg{width:16px;height:16px;fill:currentColor}
 .acts{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 
+/* box di aiuto (test sensibili) */
+.help{background:#fff7ed;border:2px solid #fed7aa;border-radius:16px;padding:14px 16px;font-size:14px;color:#7c2d12;line-height:1.5;margin:0 0 18px}
+.help b{display:block;color:#9a3412;margin-bottom:4px}
+.help a{color:#9a3412;font-weight:700}
+.res .help{margin:18px 0 0}
+/* profilo multi-scala */
+.prof{display:grid;gap:14px;margin-top:6px}
+.prof .dim{margin:0}
+.prof .dim .bar i{background:linear-gradient(90deg,var(--acc),var(--g2))}
+.prof .dim .bandl{font-size:12.5px;font-weight:700;color:var(--acc-t);margin:0 0 4px}
+/* sezioni hub */
+.group{max-width:1040px;margin:26px auto 0}
+.group > h2{color:#fff;font-size:20px;font-weight:800;margin:0 0 4px;letter-spacing:-.01em}
+.group p.gsub{color:rgba(255,255,255,.85);font-size:14px;margin:0 0 14px}
+
 /* hub */
 .hero{color:#fff;text-align:center;max-width:720px;margin:24px auto 30px}
 .hero h1{font-size:clamp(34px,6vw,56px);margin:0 0 10px;color:#fff}
 .hero p{font-size:17px;opacity:.92;margin:0;line-height:1.5}
 .tests{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tests.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.tests.three{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.tests{grid-template-columns:1fr}}
+@media(max-width:600px){.tests.three{grid-template-columns:1fr}}
 .tests .card{max-width:none;display:flex;flex-direction:column;gap:6px}
-.tests h2{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:12px 0 2px;line-height:1.15}
+.tests h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:12px 0 2px;line-height:1.15}
 .tests p{color:var(--ink2);margin:0 0 6px;font-size:15px;line-height:1.55;flex:1}
 .tests .btn{align-self:flex-start;margin-top:8px}
 .how{max-width:1040px;margin:24px auto 0}

@@ -3,9 +3,10 @@
    PSY.mount(cfg) disegna intro → domande (con avanzamento,
    avanti/indietro, tastiera 1-7) → risultato (render del modulo)
    con box di condivisione e link ricostruibile.
-   cfg: { code, n, order?, items(L)->[], labels(L)->[7], ui(L)->{...},
+   cfg: { code, n, order?, items(L)->[], labels(L)->[K] (K<=9), ui(L)->{...},
+          sensitive? (mostra il box di aiuto in intro e risultato),
           score(answers)->res, render(res, L, answers)->{html, summary} }
-   Link: ?r=<n cifre 1-7>&run=1&lang=xx
+   Link: ?r=<n cifre 1-K>&run=1&lang=xx  (cifra = indice opzione, 1-based)
    ============================================================ */
 (function () {
   const $ = id => document.getElementById(id);
@@ -32,7 +33,7 @@
     const ui = () => cfg.ui(langOf());
 
     function shareURL() {
-      const u = new URL(location.href); u.search = "";
+      const u = new URL(location.href); const t = u.searchParams.get("t"); u.search = ""; if (t) u.searchParams.set("t", t);
       u.searchParams.set("r", answers.join("")); u.searchParams.set("run", "1"); u.searchParams.set("lang", langOf());
       return u.href;
     }
@@ -51,6 +52,7 @@
         <p class="lede">${esc(u.lede)}</p>
         <div class="meta">${u.meta.map(m => `<span>${esc(m)}</span>`).join("")}</div>
         <div class="instr">${u.instr}</div>
+        ${cfg.sensitive ? `<div class="help">${u.help}</div>` : ""}
         <button class="btn full" id="start" type="button">${esc(u.start)}${ICON.next}</button>
         <p class="hint">${esc(u.privacy)}</p>
       </div>`;
@@ -91,7 +93,7 @@
     }
     function onKey(e) {
       if (state !== "q") return;
-      if (/^[1-7]$/.test(e.key)) { const b = root.querySelector(`.opt[data-v="${e.key}"]`); if (b) b.click(); }
+      if (/^[1-9]$/.test(e.key)) { const b = root.querySelector(`.opt[data-v="${e.key}"]`); if (b) b.click(); }
       else if (e.key === "ArrowRight" || e.key === "Enter") advance();
       else if (e.key === "ArrowLeft") $("back").click();
     }
@@ -107,6 +109,7 @@
       root.innerHTML = `<div class="card res${animate ? " fade" : ""}">
         <span class="kicker">${esc(u.resultKicker)}</span>
         ${out.html}
+        ${cfg.sensitive ? `<div class="help">${u.help}</div>` : ""}
         <div class="sharebox" id="share">
           <h3>${esc(u.share.title)}</h3><p>${esc(u.share.lab)}</p>
           <input type="text" id="shareUrl" readonly value="${esc(url)}" aria-label="URL">
@@ -142,7 +145,8 @@
     window.addEventListener("zlangchange", applyLang);
 
     const sp = new URLSearchParams(location.search), r = sp.get("r");
-    if (r && new RegExp("^[1-7]{" + N + "}$").test(r)) {
+    const K = cfg.labels(langOf()).length;
+    if (r && new RegExp("^[1-" + K + "]{" + N + "}$").test(r)) {
       for (let i = 0; i < N; i++) answers[i] = +r[i];
       if (sp.get("run") === "1") { last = cfg.score(answers); state = "res"; }
     }
