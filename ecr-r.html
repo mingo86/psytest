@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stile di attaccamento · psytest</title>
+<meta name="description" content="Test dello stile di attaccamento ECR-R: 36 domande, ansia ed evitamento, profilo più vicino, link condivisibile. Calcolo sul tuo dispositivo.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="psy/app.css">
+</head>
+<body>
+<div class="top"><a class="brand" href="index.html">psytest<small>Test 1 · Attaccamento</small></a><span id="langPick"></span></div>
+<main class="stage" id="app"></main>
+<p class="foot">ECR-R · Fraley, Waller &amp; Brennan (2000) · <span id="footTxt"></span></p>
+
+<script src="lang/i18n.js"></script>
+<script src="tests/ecrr.js"></script>
+<script src="psy/app.js"></script>
+<script>
+(function(){
+  const A=window.ATTACH, esc=PSY.esc;
+  const ORDER=[]; for(let i=1;i<=18;i++){ORDER.push(i);ORDER.push(i+18);}
+  const fmt=(x,L)=>x.toFixed(2).replace(".", L==="en"?".":",");
+  const LABELS={
+    it:["Per niente d'accordo","Poco d'accordo","Un po' in disaccordo","Né d'accordo né in disaccordo","Un po' d'accordo","Abbastanza d'accordo","Del tutto d'accordo"],
+    en:["Strongly disagree","Disagree","Somewhat disagree","Neither agree nor disagree","Somewhat agree","Agree","Strongly agree"],
+    fr:["Pas du tout d'accord","Pas d'accord","Plutôt pas d'accord","Ni d'accord ni pas d'accord","Plutôt d'accord","D'accord","Tout à fait d'accord"],
+    es:["Totalmente en desacuerdo","En desacuerdo","Algo en desacuerdo","Ni de acuerdo ni en desacuerdo","Algo de acuerdo","De acuerdo","Totalmente de acuerdo"],
+    pt:["Discordo totalmente","Discordo","Discordo um pouco","Nem concordo nem discordo","Concordo um pouco","Concordo","Concordo totalmente"],
+    de:["Stimme gar nicht zu","Stimme nicht zu","Stimme eher nicht zu","Weder noch","Stimme eher zu","Stimme zu","Stimme völlig zu"]
+  };
+  const UI={
+    it:{kicker:"Test 1 · Attaccamento",title:"Come ami, davvero?",lede:"36 domande, 6 minuti. Scopri il tuo stile di attaccamento con l'ECR-R, il test usato nella ricerca. Tutto resta sul tuo telefono.",
+      meta:["36 domande","~6 minuti","6 lingue","Nessun dato inviato"],
+      instr:"Le frasi riguardano come ti senti nelle relazioni <b>sentimentali in generale</b>, non solo in quella attuale: se ora non hai un partner, pensa alle relazioni passate o a come ti sentiresti. Per ogni frase scegli quanto sei d'accordo, da 1 a 7.",
+      start:"Inizia il test",privacy:"Le risposte esistono solo nel link che deciderai di condividere.",qn:(i,n)=>`Domanda ${i} di ${n}`,back:"Indietro",next:"Avanti",finish:"Vedi il risultato",keys:"Da tastiera: 1–7 per rispondere, frecce per spostarti.",
+      resultKicker:"Il tuo risultato",share:{title:"Condividi il tuo risultato",lab:"Il link ricostruisce esattamente il tuo profilo.",copy:"Copia link",copied:"Copiato!",sys:"Condividi",subject:"Il mio stile di attaccamento (ECR-R)"},retake:"Rifai il test",other:"Altri test",
+      security:"Sicurezza",near:"Profilo più vicino",anx:"Ansia",avo:"Evitamento",pct:p=>`${p}° percentile`,mean:"media",dims:"Le due dimensioni",
+      mapT:"La mappa dell'attaccamento",axAnx:"ansia →",axAvo:"evitamento →",
+      mapTxt:"In orizzontale l'<b>ansia</b> (paura di perdere l'altro), in verticale l'<b>evitamento</b> (disagio nella vicinanza). Il punto sei tu; le linee tratteggiate sono le medie del campione online di Fraley (17.000+ persone). I quattro quadranti sono letture, non caselle: più sei vicino al centro, più i profili si mescolano.",
+      tip:"Cosa può aiutarti",how:"Come si calcola",
+      howTxt:"18 domande misurano l'ansia da attaccamento, 18 l'evitamento; ogni dimensione è la media delle risposte da 1 a 7 (14 domande sono invertite). La «sicurezza» è la media delle due dimensioni ribaltata in percentuale, come suggerito da Fraley. Il confronto è con il suo campione online. Tutto è calcolato sul tuo dispositivo.",
+      disc:"L'ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) è di pubblico dominio per uso non commerciale. Strumento di auto-esplorazione, non una diagnosi: gli autori sconsigliano le categorie rigide, le due dimensioni sono continue.",
+      foot:"strumento di auto-esplorazione, non una diagnosi",
+      summary:(S,r,L)=>`Il mio stile di attaccamento (ECR-R): ${S.n} — ansia ${fmt(r.anx,L)}/7, evitamento ${fmt(r.avo,L)}/7`},
+    en:{kicker:"Test 1 · Attachment",title:"How do you really love?",lede:"36 questions, 6 minutes. Discover your attachment style with the ECR-R, the test used in research. Everything stays on your phone.",
+      meta:["36 questions","~6 minutes","6 languages","Nothing sent"],
+      instr:"The statements concern how you feel in <b>emotionally intimate relationships in general</b>, not just your current one: if you are not in a relationship now, think of past ones or how you would feel. For each statement, choose how much you agree, from 1 to 7.",
+      start:"Start the test",privacy:"Your answers exist only in the link you decide to share.",qn:(i,n)=>`Question ${i} of ${n}`,back:"Back",next:"Next",finish:"See your result",keys:"Keyboard: 1–7 to answer, arrows to move.",
+      resultKicker:"Your result",share:{title:"Share your result",lab:"The link rebuilds exactly your profile.",copy:"Copy link",copied:"Copied!",sys:"Share",subject:"My attachment style (ECR-R)"},retake:"Retake the test",other:"Other tests",
+      security:"Security",near:"Closest profile",anx:"Anxiety",avo:"Avoidance",pct:p=>`${p}th percentile`,mean:"mean",dims:"The two dimensions",
+      mapT:"The attachment map",axAnx:"anxiety →",axAvo:"avoidance →",
+      mapTxt:"Horizontal is <b>anxiety</b> (fear of losing the other), vertical is <b>avoidance</b> (discomfort with closeness). The dot is you; the dashed lines are the means of Fraley's online sample (17,000+ people). The four quadrants are readings, not boxes: the closer to the centre, the more the profiles blend.",
+      tip:"What can help",how:"How it is scored",
+      howTxt:"18 questions measure attachment anxiety, 18 avoidance; each dimension is the mean of answers from 1 to 7 (14 questions are reverse-keyed). “Security” is the average of the two dimensions flipped into a percentage, as Fraley suggests. The comparison is with his online sample. Everything is computed on your device.",
+      disc:"The ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) is public domain for non-commercial use. A self-exploration tool, not a diagnosis: the authors advise against strict categories, the two dimensions are continuous.",
+      foot:"a self-exploration tool, not a diagnosis",
+      summary:(S,r,L)=>`My attachment style (ECR-R): ${S.n} — anxiety ${fmt(r.anx,L)}/7, avoidance ${fmt(r.avo,L)}/7`},
+    fr:{kicker:"Test 1 · Attachement",title:"Comment tu aimes, vraiment ?",lede:"36 questions, 6 minutes. Découvre ton style d'attachement avec l'ECR-R, le test utilisé en recherche. Tout reste sur ton téléphone.",
+      meta:["36 questions","~6 minutes","6 langues","Rien n'est envoyé"],
+      instr:"Les phrases concernent ce que tu ressens dans les relations <b>amoureuses en général</b>, pas seulement dans ta relation actuelle : si tu n'as pas de partenaire, pense aux relations passées ou à ce que tu ressentirais. Pour chaque phrase, choisis ton degré d'accord, de 1 à 7.",
+      start:"Commencer le test",privacy:"Tes réponses n'existent que dans le lien que tu décideras de partager.",qn:(i,n)=>`Question ${i} sur ${n}`,back:"Retour",next:"Suivant",finish:"Voir le résultat",keys:"Clavier : 1–7 pour répondre, flèches pour naviguer.",
+      resultKicker:"Ton résultat",share:{title:"Partage ton résultat",lab:"Le lien reconstruit exactement ton profil.",copy:"Copier le lien",copied:"Copié !",sys:"Partager",subject:"Mon style d'attachement (ECR-R)"},retake:"Refaire le test",other:"Autres tests",
+      security:"Sécurité",near:"Profil le plus proche",anx:"Anxiété",avo:"Évitement",pct:p=>`${p}e percentile`,mean:"moyenne",dims:"Les deux dimensions",
+      mapT:"La carte de l'attachement",axAnx:"anxiété →",axAvo:"évitement →",
+      mapTxt:"À l'horizontale l'<b>anxiété</b> (peur de perdre l'autre), à la verticale l'<b>évitement</b> (malaise dans la proximité). Le point, c'est toi ; les pointillés sont les moyennes de l'échantillon en ligne de Fraley (17 000+ personnes). Les quatre quadrants sont des lectures, pas des cases : plus tu es près du centre, plus les profils se mélangent.",
+      tip:"Ce qui peut t'aider",how:"Comment c'est calculé",
+      howTxt:"18 questions mesurent l'anxiété d'attachement, 18 l'évitement ; chaque dimension est la moyenne des réponses de 1 à 7 (14 questions sont inversées). La « sécurité » est la moyenne des deux dimensions retournée en pourcentage, comme le suggère Fraley. La comparaison se fait avec son échantillon en ligne. Tout est calculé sur ton appareil.",
+      disc:"L'ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) est du domaine public pour usage non commercial. Outil d'auto-exploration, pas un diagnostic : les auteurs déconseillent les catégories strictes, les deux dimensions sont continues.",
+      foot:"outil d'auto-exploration, pas un diagnostic",
+      summary:(S,r,L)=>`Mon style d'attachement (ECR-R) : ${S.n} — anxiété ${fmt(r.anx,L)}/7, évitement ${fmt(r.avo,L)}/7`},
+    es:{kicker:"Test 1 · Apego",title:"¿Cómo amas, de verdad?",lede:"36 preguntas, 6 minutos. Descubre tu estilo de apego con el ECR-R, el test usado en investigación. Todo se queda en tu teléfono.",
+      meta:["36 preguntas","~6 minutos","6 idiomas","No se envía nada"],
+      instr:"Las frases tratan de cómo te sientes en las relaciones <b>de pareja en general</b>, no solo en la actual: si ahora no tienes pareja, piensa en relaciones pasadas o en cómo te sentirías. Para cada frase, elige cuánto estás de acuerdo, de 1 a 7.",
+      start:"Empezar el test",privacy:"Tus respuestas existen solo en el enlace que decidas compartir.",qn:(i,n)=>`Pregunta ${i} de ${n}`,back:"Atrás",next:"Siguiente",finish:"Ver el resultado",keys:"Teclado: 1–7 para responder, flechas para moverte.",
+      resultKicker:"Tu resultado",share:{title:"Comparte tu resultado",lab:"El enlace reconstruye exactamente tu perfil.",copy:"Copiar enlace",copied:"¡Copiado!",sys:"Compartir",subject:"Mi estilo de apego (ECR-R)"},retake:"Repetir el test",other:"Otros tests",
+      security:"Seguridad",near:"Perfil más cercano",anx:"Ansiedad",avo:"Evitación",pct:p=>`percentil ${p}`,mean:"media",dims:"Las dos dimensiones",
+      mapT:"El mapa del apego",axAnx:"ansiedad →",axAvo:"evitación →",
+      mapTxt:"En horizontal la <b>ansiedad</b> (miedo a perder al otro), en vertical la <b>evitación</b> (incomodidad con la cercanía). El punto eres tú; las líneas discontinuas son las medias de la muestra online de Fraley (17.000+ personas). Los cuatro cuadrantes son lecturas, no casillas: cuanto más cerca del centro, más se mezclan los perfiles.",
+      tip:"Qué puede ayudarte",how:"Cómo se calcula",
+      howTxt:"18 preguntas miden la ansiedad de apego y 18 la evitación; cada dimensión es la media de las respuestas de 1 a 7 (14 preguntas están invertidas). La «seguridad» es la media de las dos dimensiones invertida en porcentaje, como sugiere Fraley. La comparación es con su muestra online. Todo se calcula en tu dispositivo.",
+      disc:"El ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) es de dominio público para uso no comercial. Herramienta de autoexploración, no un diagnóstico: los autores desaconsejan las categorías rígidas, las dos dimensiones son continuas.",
+      foot:"herramienta de autoexploración, no un diagnóstico",
+      summary:(S,r,L)=>`Mi estilo de apego (ECR-R): ${S.n} — ansiedad ${fmt(r.anx,L)}/7, evitación ${fmt(r.avo,L)}/7`},
+    pt:{kicker:"Teste 1 · Apego",title:"Como você ama, de verdade?",lede:"36 perguntas, 6 minutos. Descubra seu estilo de apego com o ECR-R, o teste usado em pesquisa. Tudo fica no seu celular.",
+      meta:["36 perguntas","~6 minutos","6 idiomas","Nada é enviado"],
+      instr:"As frases falam de como você se sente nos relacionamentos <b>amorosos em geral</b>, não só no atual: se não tem parceiro(a) agora, pense nos relacionamentos passados ou em como se sentiria. Para cada frase, escolha o quanto concorda, de 1 a 7.",
+      start:"Começar o teste",privacy:"Suas respostas existem só no link que você decidir compartilhar.",qn:(i,n)=>`Pergunta ${i} de ${n}`,back:"Voltar",next:"Próxima",finish:"Ver o resultado",keys:"Teclado: 1–7 para responder, setas para navegar.",
+      resultKicker:"Seu resultado",share:{title:"Compartilhe seu resultado",lab:"O link reconstrói exatamente o seu perfil.",copy:"Copiar link",copied:"Copiado!",sys:"Compartilhar",subject:"Meu estilo de apego (ECR-R)"},retake:"Refazer o teste",other:"Outros testes",
+      security:"Segurança",near:"Perfil mais próximo",anx:"Ansiedade",avo:"Evitação",pct:p=>`percentil ${p}`,mean:"média",dims:"As duas dimensões",
+      mapT:"O mapa do apego",axAnx:"ansiedade →",axAvo:"evitação →",
+      mapTxt:"Na horizontal a <b>ansiedade</b> (medo de perder o outro), na vertical a <b>evitação</b> (desconforto com a proximidade). O ponto é você; as linhas tracejadas são as médias da amostra online de Fraley (17.000+ pessoas). Os quatro quadrantes são leituras, não caixas: quanto mais perto do centro, mais os perfis se misturam.",
+      tip:"O que pode ajudar",how:"Como é calculado",
+      howTxt:"18 perguntas medem a ansiedade de apego e 18 a evitação; cada dimensão é a média das respostas de 1 a 7 (14 perguntas são invertidas). A «segurança» é a média das duas dimensões invertida em porcentagem, como sugere Fraley. A comparação é com a amostra online dele. Tudo é calculado no seu dispositivo.",
+      disc:"O ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) é de domínio público para uso não comercial. Ferramenta de autoexploração, não um diagnóstico: os autores desaconselham categorias rígidas, as duas dimensões são contínuas.",
+      foot:"ferramenta de autoexploração, não um diagnóstico",
+      summary:(S,r,L)=>`Meu estilo de apego (ECR-R): ${S.n} — ansiedade ${fmt(r.anx,L)}/7, evitação ${fmt(r.avo,L)}/7`},
+    de:{kicker:"Test 1 · Bindung",title:"Wie liebst du wirklich?",lede:"36 Fragen, 6 Minuten. Entdecke deinen Bindungsstil mit dem ECR-R, dem Test aus der Forschung. Alles bleibt auf deinem Handy.",
+      meta:["36 Fragen","~6 Minuten","6 Sprachen","Nichts wird gesendet"],
+      instr:"Die Aussagen betreffen, wie du dich in <b>Liebesbeziehungen allgemein</b> fühlst, nicht nur in der aktuellen: wenn du gerade keine:n Partner:in hast, denk an frühere Beziehungen oder daran, wie du dich fühlen würdest. Wähle bei jeder Aussage, wie sehr du zustimmst, von 1 bis 7.",
+      start:"Test starten",privacy:"Deine Antworten existieren nur im Link, den du teilen möchtest.",qn:(i,n)=>`Frage ${i} von ${n}`,back:"Zurück",next:"Weiter",finish:"Ergebnis ansehen",keys:"Tastatur: 1–7 zum Antworten, Pfeile zum Navigieren.",
+      resultKicker:"Dein Ergebnis",share:{title:"Teile dein Ergebnis",lab:"Der Link stellt genau dein Profil wieder her.",copy:"Link kopieren",copied:"Kopiert!",sys:"Teilen",subject:"Mein Bindungsstil (ECR-R)"},retake:"Test wiederholen",other:"Weitere Tests",
+      security:"Sicherheit",near:"Nächstes Profil",anx:"Angst",avo:"Vermeidung",pct:p=>`${p}. Perzentil`,mean:"Mittel",dims:"Die zwei Dimensionen",
+      mapT:"Die Bindungskarte",axAnx:"Angst →",axAvo:"Vermeidung →",
+      mapTxt:"Horizontal die <b>Angst</b> (Furcht, den anderen zu verlieren), vertikal die <b>Vermeidung</b> (Unbehagen bei Nähe). Der Punkt bist du; die gestrichelten Linien sind die Mittelwerte von Fraleys Online-Stichprobe (17.000+ Personen). Die vier Quadranten sind Lesarten, keine Schubladen: je näher der Mitte, desto mehr mischen sich die Profile.",
+      tip:"Was helfen kann",how:"So wird ausgewertet",
+      howTxt:"18 Fragen messen die Bindungsangst, 18 die Vermeidung; jede Dimension ist der Mittelwert der Antworten von 1 bis 7 (14 Fragen sind umgepolt). Die „Sicherheit“ ist der Mittelwert beider Dimensionen, in einen Prozentwert umgekehrt, wie Fraley vorschlägt. Verglichen wird mit seiner Online-Stichprobe. Alles wird auf deinem Gerät berechnet.",
+      disc:"Der ECR-R (Fraley, Waller & Brennan, 2000, Journal of Personality and Social Psychology, 78, 350-365) ist für nicht-kommerzielle Nutzung gemeinfrei. Ein Werkzeug zur Selbsterkundung, keine Diagnose: die Autoren raten von starren Kategorien ab, die beiden Dimensionen sind kontinuierlich.",
+      foot:"Werkzeug zur Selbsterkundung, keine Diagnose",
+      summary:(S,r,L)=>`Mein Bindungsstil (ECR-R): ${S.n} — Angst ${fmt(r.anx,L)}/7, Vermeidung ${fmt(r.avo,L)}/7`}
+  };
+
+  function mapSVG(r,L,u){
+    const S=A.STYLES[L]||A.STYLES.en; const W=300,P=26; const sc=v=>(v-1)/6*(W-2*P);
+    const x=P+sc(r.anx), y=W-P-sc(r.avo), mx=P+sc(A.NORMS.anx.m), my=W-P-sc(A.NORMS.avo.m);
+    let g=""; for(let v=2;v<7;v++){const t=P+sc(v); g+=`<line x1="${t}" y1="${P}" x2="${t}" y2="${W-P}"/><line x1="${P}" y1="${t}" x2="${W-P}" y2="${t}"/>`;}
+    const q=(k,x0,y0,x1,y1)=>`<rect class="quad${r.style===k?" on":""}" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" rx="10"/>`;
+    const lab=(k,x,y,a)=>`<text class="qlab${r.style===k?" on":""}" x="${x}" y="${y}" text-anchor="${a}">${esc(S[k].n)}</text>`;
+    return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="${esc(u.mapT)}">
+      ${q("dismissing",P,P,mx,my)}${q("fearful",mx,P,W-P,my)}${q("secure",P,my,mx,W-P)}${q("preoccupied",mx,my,W-P,W-P)}
+      <g class="grid">${g}</g><rect class="frame" x="${P}" y="${P}" width="${W-2*P}" height="${W-2*P}" rx="14"/>
+      <line class="mean" x1="${mx}" y1="${P}" x2="${mx}" y2="${W-P}"/><line class="mean" x1="${P}" y1="${my}" x2="${W-P}" y2="${my}"/>
+      ${lab("dismissing",P+10,P+18,"start")}${lab("fearful",W-P-10,P+18,"end")}${lab("secure",P+10,W-P-10,"start")}${lab("preoccupied",W-P-10,W-P-10,"end")}
+      <text class="axl" x="${W/2}" y="${W-6}" text-anchor="middle">${esc(u.axAnx)}</text>
+      <text class="axl" x="9" y="${W/2}" text-anchor="middle" transform="rotate(-90 9 ${W/2})">${esc(u.axAvo)}</text>
+      <circle cx="${x}" cy="${y}" r="11" fill="var(--acc)" stroke="#fff" stroke-width="4"/><circle cx="${x}" cy="${y}" r="15" fill="none" stroke="var(--acc)" stroke-width="1.5" opacity=".5"/>
+    </svg>`;
+  }
+  const mp=v=>((v-1)/6*100).toFixed(1)+"%";
+
+  function render(r,L){
+    const u=UI[L]||UI.it, ST=A.STYLES[L]||A.STYLES.en, S=ST[r.style], B=A.BANDS[L]||A.BANDS.en;
+    const sec=Math.round((1-(((r.anx+r.avo)/2)-1)/6)*100);
+    const html=`
+      <div class="big"><div class="ring" style="--p:${sec}%"><div>${sec}%<small>${esc(u.security).toUpperCase()}</small></div></div>
+        <div><p class="style">${esc(S.n)}<small>${esc(S.tag)}</small></p></div></div>
+      <div class="chips"><span class="chip p">${esc(u.anx)} ${fmt(r.anx,L)}</span><span class="chip">${esc(u.avo)} ${fmt(r.avo,L)}</span><span class="chip p">${esc(u.pct(r.pA))}</span><span class="chip">${esc(u.pct(r.pV))}</span></div>
+      <p class="desc">${esc(S.desc)}</p>
+      <div class="sec"><h2>${esc(u.dims)}</h2>
+        <div class="dim a"><div class="h"><span>${esc(u.anx)}</span><span>${fmt(r.anx,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.anx)}"></i><em style="left:${mp(A.NORMS.anx.m)}" data-l="${esc(u.mean)} ${fmt(A.NORMS.anx.m,L)}"></em></div><p class="t">${esc(B.anx[r.bandA])}</p></div>
+        <div class="dim v"><div class="h"><span>${esc(u.avo)}</span><span>${fmt(r.avo,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.avo)}"></i><em style="left:${mp(A.NORMS.avo.m)}" data-l="${esc(u.mean)} ${fmt(A.NORMS.avo.m,L)}"></em></div><p class="t">${esc(B.avo[r.bandV])}</p></div>
+      </div>
+      <div class="sec"><h2>${esc(u.mapT)}</h2><div class="map">${mapSVG(r,L,u)}<div class="legend">
+        ${["secure","preoccupied","dismissing","fearful"].map(k=>`<div class="r"><b>${esc(ST[k].n)}</b><span>${esc(ST[k].tag)}</span></div>`).join("")}<p>${u.mapTxt}</p></div></div></div>
+      <div class="tip"><b>${esc(u.tip)}</b>${esc(S.tip)}</div>
+      <div class="sec"><h2>${esc(u.how)}</h2><p>${esc(u.howTxt)}</p><p class="note">${esc(u.disc)}</p></div>`;
+    return {html, summary:u.summary(S,r,L)};
+  }
+
+  const ui=L=>UI[L]||UI.it;
+  const setFoot=()=>{document.getElementById("footTxt").textContent=ui(window.ZI18N?window.ZI18N.get():"it").foot;};
+  window.addEventListener("zlangchange",setFoot); setFoot();
+  PSY.mount({code:"ECR-R",n:36,order:ORDER,items:L=>A.ITEMS[L]||A.ITEMS.en,labels:L=>LABELS[L]||LABELS.en,ui,score:A.score,render});
+})();
+</script>
+</body>
+</html>

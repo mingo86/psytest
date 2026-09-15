@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flessibilità psicologica · psytest</title>
+<meta name="description" content="AAQ-II: 7 domande, punteggio di evitamento esperienziale con soglie di ricerca e link condivisibile. Calcolo sul tuo dispositivo.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="psy/app.css">
+</head>
+<body data-theme="teal">
+<div class="top"><a class="brand" href="index.html">psytest<small>Test 2 · Flessibilità</small></a><span id="langPick"></span></div>
+<main class="stage" id="app"></main>
+<p class="foot">AAQ-II · Bond, Hayes et al. (2011) · Pennato et al. (2013) · <span id="footTxt"></span></p>
+
+<script src="lang/i18n.js"></script>
+<script src="tests/aaq.js"></script>
+<script src="psy/app.js"></script>
+<script>
+(function(){
+  const Q=window.AAQ, esc=PSY.esc;
+  const UI={
+    it:{kicker:"Test 2 · Flessibilità",title:"Quanto ti pesano le emozioni?",lede:"7 domande, 2 minuti. L'AAQ-II misura l'evitamento esperienziale: quanto emozioni, ricordi e preoccupazioni ti ostacolano. È la misura usata nel modello ACT.",
+      meta:["7 domande","~2 minuti","6 lingue","Nessun dato inviato"],
+      instr:"Per ogni frase scegli <b>quanto è vera per te</b>, da 1 (mai vera) a 7 (sempre vera). Rispondi sull'<b>ultimo mese</b>, non su come vorresti essere.",
+      start:"Inizia il test",privacy:"Le risposte esistono solo nel link che deciderai di condividere.",qn:(i,n)=>`Domanda ${i} di ${n}`,back:"Indietro",next:"Avanti",finish:"Vedi il risultato",keys:"Da tastiera: 1–7 per rispondere, frecce per spostarti.",
+      resultKicker:"Il tuo risultato",share:{title:"Condividi il tuo risultato",lab:"Il link ricostruisce esattamente il tuo punteggio.",copy:"Copia link",copied:"Copiato!",sys:"Condividi",subject:"Il mio punteggio AAQ-II"},retake:"Rifai il test",other:"Altri test",
+      of:"su 49",profile:"Le sette domande",cal:"Come si legge",
+      calTxt:"Il punteggio va da 7 a 49; più è alto, più evitamento esperienziale e rigidità psicologica. Nella popolazione generale la media è intorno a 18-20. Soglie usate in letteratura: sopra 24 è associato a livelli clinicamente rilevanti di disagio; sopra 28 probabile disturbo. Sono soglie di ricerca, non diagnosi. Critica nota: il questionario correla molto con il nevroticismo e con il disagio in generale, quindi misura anche «quanto stai male adesso», non solo la flessibilità. Se lo rifai tra un mese e cambia, è normale.",
+      bands:{low:"≤17 · basso",avg:"18–23 · media",high:"24–28 · soglia",vhigh:">28 · clinica"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Adattamento italiano: Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Strumento di pubblico dominio per uso non commerciale; non è una diagnosi.",
+      foot:"strumento di auto-esplorazione, non una diagnosi",
+      summary:r=>`Il mio AAQ-II (flessibilità psicologica): ${r.tot}/49 — ${Q.BANDS.it[r.band].n}`},
+    en:{kicker:"Test 2 · Flexibility",title:"How much do your emotions weigh on you?",lede:"7 questions, 2 minutes. The AAQ-II measures experiential avoidance: how much emotions, memories and worries get in your way. It is the measure used in the ACT model.",
+      meta:["7 questions","~2 minutes","6 languages","Nothing sent"],
+      instr:"For each statement, choose <b>how true it is for you</b>, from 1 (never true) to 7 (always true). Answer about the <b>last month</b>, not about how you would like to be.",
+      start:"Start the test",privacy:"Your answers exist only in the link you decide to share.",qn:(i,n)=>`Question ${i} of ${n}`,back:"Back",next:"Next",finish:"See your result",keys:"Keyboard: 1–7 to answer, arrows to move.",
+      resultKicker:"Your result",share:{title:"Share your result",lab:"The link rebuilds exactly your score.",copy:"Copy link",copied:"Copied!",sys:"Share",subject:"My AAQ-II score"},retake:"Retake the test",other:"Other tests",
+      of:"out of 49",profile:"The seven questions",cal:"How to read it",
+      calTxt:"The score runs from 7 to 49; the higher, the more experiential avoidance and psychological inflexibility. In the general population the mean is around 18-20. Thresholds used in the literature: above 24 is associated with clinically meaningful distress; above 28, probable disorder. These are research thresholds, not diagnoses. A known criticism: the questionnaire correlates strongly with neuroticism and with distress in general, so it also measures “how bad you feel right now”, not only flexibility. If you retake it in a month and it changes, that is normal.",
+      bands:{low:"≤17 · low",avg:"18–23 · average",high:"24–28 · threshold",vhigh:">28 · clinical"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Italian adaptation: Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Public-domain instrument for non-commercial use; not a diagnosis.",
+      foot:"a self-exploration tool, not a diagnosis",
+      summary:r=>`My AAQ-II (psychological flexibility): ${r.tot}/49 — ${Q.BANDS.en[r.band].n}`},
+    fr:{kicker:"Test 2 · Flexibilité",title:"À quel point tes émotions te pèsent ?",lede:"7 questions, 2 minutes. L'AAQ-II mesure l'évitement expérientiel : à quel point les émotions, les souvenirs et les inquiétudes te font obstacle. C'est la mesure utilisée dans le modèle ACT.",
+      meta:["7 questions","~2 minutes","6 langues","Rien n'est envoyé"],
+      instr:"Pour chaque phrase, choisis <b>à quel point elle est vraie pour toi</b>, de 1 (jamais vrai) à 7 (toujours vrai). Réponds sur le <b>dernier mois</b>, pas sur ce que tu voudrais être.",
+      start:"Commencer le test",privacy:"Tes réponses n'existent que dans le lien que tu décideras de partager.",qn:(i,n)=>`Question ${i} sur ${n}`,back:"Retour",next:"Suivant",finish:"Voir le résultat",keys:"Clavier : 1–7 pour répondre, flèches pour naviguer.",
+      resultKicker:"Ton résultat",share:{title:"Partage ton résultat",lab:"Le lien reconstruit exactement ton score.",copy:"Copier le lien",copied:"Copié !",sys:"Partager",subject:"Mon score AAQ-II"},retake:"Refaire le test",other:"Autres tests",
+      of:"sur 49",profile:"Les sept questions",cal:"Comment le lire",
+      calTxt:"Le score va de 7 à 49 ; plus il est élevé, plus l'évitement expérientiel et la rigidité psychologique sont marqués. Dans la population générale, la moyenne se situe autour de 18-20. Seuils utilisés dans la littérature : au-dessus de 24, détresse cliniquement notable ; au-dessus de 28, trouble probable. Ce sont des seuils de recherche, pas des diagnostics. Critique connue : le questionnaire corrèle fortement avec le névrosisme et la détresse en général, donc il mesure aussi « à quel point tu vas mal en ce moment », pas seulement la flexibilité. Si tu le refais dans un mois et qu'il change, c'est normal.",
+      bands:{low:"≤17 · bas",avg:"18–23 · moyenne",high:"24–28 · seuil",vhigh:">28 · clinique"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Adaptation italienne : Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Instrument du domaine public pour usage non commercial ; ce n'est pas un diagnostic.",
+      foot:"outil d'auto-exploration, pas un diagnostic",
+      summary:r=>`Mon AAQ-II (flexibilité psychologique) : ${r.tot}/49 — ${Q.BANDS.fr[r.band].n}`},
+    es:{kicker:"Test 2 · Flexibilidad",title:"¿Cuánto te pesan las emociones?",lede:"7 preguntas, 2 minutos. El AAQ-II mide la evitación experiencial: cuánto te obstaculizan las emociones, los recuerdos y las preocupaciones. Es la medida usada en el modelo ACT.",
+      meta:["7 preguntas","~2 minutos","6 idiomas","No se envía nada"],
+      instr:"Para cada frase, elige <b>cuánto es verdad para ti</b>, de 1 (nunca es verdad) a 7 (siempre es verdad). Responde sobre el <b>último mes</b>, no sobre cómo te gustaría ser.",
+      start:"Empezar el test",privacy:"Tus respuestas existen solo en el enlace que decidas compartir.",qn:(i,n)=>`Pregunta ${i} de ${n}`,back:"Atrás",next:"Siguiente",finish:"Ver el resultado",keys:"Teclado: 1–7 para responder, flechas para moverte.",
+      resultKicker:"Tu resultado",share:{title:"Comparte tu resultado",lab:"El enlace reconstruye exactamente tu puntuación.",copy:"Copiar enlace",copied:"¡Copiado!",sys:"Compartir",subject:"Mi puntuación AAQ-II"},retake:"Repetir el test",other:"Otros tests",
+      of:"de 49",profile:"Las siete preguntas",cal:"Cómo leerlo",
+      calTxt:"La puntuación va de 7 a 49; cuanto más alta, más evitación experiencial y rigidez psicológica. En la población general la media ronda 18-20. Umbrales usados en la literatura: por encima de 24 se asocia a malestar clínicamente relevante; por encima de 28, trastorno probable. Son umbrales de investigación, no diagnósticos. Crítica conocida: el cuestionario correlaciona mucho con el neuroticismo y con el malestar en general, así que también mide «cuánto estás mal ahora», no solo la flexibilidad. Si lo repites dentro de un mes y cambia, es normal.",
+      bands:{low:"≤17 · bajo",avg:"18–23 · media",high:"24–28 · umbral",vhigh:">28 · clínica"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Adaptación italiana: Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Instrumento de dominio público para uso no comercial; no es un diagnóstico.",
+      foot:"herramienta de autoexploración, no un diagnóstico",
+      summary:r=>`Mi AAQ-II (flexibilidad psicológica): ${r.tot}/49 — ${Q.BANDS.es[r.band].n}`},
+    pt:{kicker:"Teste 2 · Flexibilidade",title:"Quanto as emoções pesam para você?",lede:"7 perguntas, 2 minutos. O AAQ-II mede a evitação experiencial: o quanto emoções, lembranças e preocupações atrapalham você. É a medida usada no modelo ACT.",
+      meta:["7 perguntas","~2 minutos","6 idiomas","Nada é enviado"],
+      instr:"Para cada frase, escolha <b>o quanto ela é verdadeira para você</b>, de 1 (nunca é verdade) a 7 (sempre é verdade). Responda sobre o <b>último mês</b>, não sobre como gostaria de ser.",
+      start:"Começar o teste",privacy:"Suas respostas existem só no link que você decidir compartilhar.",qn:(i,n)=>`Pergunta ${i} de ${n}`,back:"Voltar",next:"Próxima",finish:"Ver o resultado",keys:"Teclado: 1–7 para responder, setas para navegar.",
+      resultKicker:"Seu resultado",share:{title:"Compartilhe seu resultado",lab:"O link reconstrói exatamente a sua pontuação.",copy:"Copiar link",copied:"Copiado!",sys:"Compartilhar",subject:"Minha pontuação AAQ-II"},retake:"Refazer o teste",other:"Outros testes",
+      of:"de 49",profile:"As sete perguntas",cal:"Como ler",
+      calTxt:"A pontuação vai de 7 a 49; quanto mais alta, mais evitação experiencial e rigidez psicológica. Na população geral a média fica em torno de 18-20. Limiares usados na literatura: acima de 24 está associado a sofrimento clinicamente relevante; acima de 28, provável transtorno. São limiares de pesquisa, não diagnósticos. Crítica conhecida: o questionário correlaciona muito com o neuroticismo e com o sofrimento em geral, então mede também «o quanto você está mal agora», não só a flexibilidade. Se refizer daqui a um mês e mudar, é normal.",
+      bands:{low:"≤17 · baixo",avg:"18–23 · média",high:"24–28 · limiar",vhigh:">28 · clínica"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Adaptação italiana: Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Instrumento de domínio público para uso não comercial; não é um diagnóstico.",
+      foot:"ferramenta de autoexploração, não um diagnóstico",
+      summary:r=>`Meu AAQ-II (flexibilidade psicológica): ${r.tot}/49 — ${Q.BANDS.pt[r.band].n}`},
+    de:{kicker:"Test 2 · Flexibilität",title:"Wie sehr belasten dich deine Gefühle?",lede:"7 Fragen, 2 Minuten. Der AAQ-II misst Erlebnisvermeidung: wie sehr Gefühle, Erinnerungen und Sorgen dir im Weg stehen. Es ist das Maß aus dem ACT-Modell.",
+      meta:["7 Fragen","~2 Minuten","6 Sprachen","Nichts wird gesendet"],
+      instr:"Wähle bei jeder Aussage, <b>wie sehr sie auf dich zutrifft</b>, von 1 (nie wahr) bis 7 (immer wahr). Antworte für den <b>letzten Monat</b>, nicht dafür, wie du gern wärst.",
+      start:"Test starten",privacy:"Deine Antworten existieren nur im Link, den du teilen möchtest.",qn:(i,n)=>`Frage ${i} von ${n}`,back:"Zurück",next:"Weiter",finish:"Ergebnis ansehen",keys:"Tastatur: 1–7 zum Antworten, Pfeile zum Navigieren.",
+      resultKicker:"Dein Ergebnis",share:{title:"Teile dein Ergebnis",lab:"Der Link stellt genau deinen Wert wieder her.",copy:"Link kopieren",copied:"Kopiert!",sys:"Teilen",subject:"Mein AAQ-II-Wert"},retake:"Test wiederholen",other:"Weitere Tests",
+      of:"von 49",profile:"Die sieben Fragen",cal:"So liest du es",
+      calTxt:"Der Wert reicht von 7 bis 49; je höher, desto mehr Erlebnisvermeidung und psychologische Inflexibilität. In der Allgemeinbevölkerung liegt der Mittelwert um 18-20. In der Literatur verwendete Schwellen: über 24 geht mit klinisch relevanter Belastung einher; über 28 wahrscheinliche Störung. Das sind Forschungsschwellen, keine Diagnosen. Bekannte Kritik: der Fragebogen korreliert stark mit Neurotizismus und mit Belastung allgemein, misst also auch „wie schlecht es dir gerade geht“, nicht nur Flexibilität. Wenn er in einem Monat anders ausfällt, ist das normal.",
+      bands:{low:"≤17 · niedrig",avg:"18–23 · Mittel",high:"24–28 · Schwelle",vhigh:">28 · klinisch"},
+      disc:"Bond, F. W., Hayes, S. C., et al. (2011). Behavior Therapy, 42, 676-688. Italienische Adaptation: Pennato, Berrocal, Bernini & Rivas (2013), Journal of Psychopathology. Gemeinfreies Instrument für nicht-kommerzielle Nutzung; keine Diagnose.",
+      foot:"Werkzeug zur Selbsterkundung, keine Diagnose",
+      summary:r=>`Mein AAQ-II (psychologische Flexibilität): ${r.tot}/49 — ${Q.BANDS.de[r.band].n}`}
+  };
+  const ui=L=>UI[L]||UI.it;
+
+  function render(r,L,answers){
+    const u=ui(L), B=Q.BANDS[L]||Q.BANDS.en;
+    const pos=((r.tot-7)/42*100).toFixed(1)+"%";
+    const html=`
+      <div class="big-score"><span class="n">${r.tot}</span><span class="of">${esc(u.of)}</span></div>
+      <p class="band">${esc(B[r.band].n)}</p>
+      <div class="scale"><em style="left:${pos}"></em></div>
+      <div class="scale-l"><span>7</span><span>17</span><span>24</span><span>28</span><span>49</span></div>
+      <div class="bands">${["low","avg","high","vhigh"].map(k=>`<span${r.band===k?' class="on"':""}>${esc(u.bands[k])}</span>`).join("")}</div>
+      <p class="desc">${esc(B[r.band].t)}</p>
+      <div class="sec"><h2>${esc(u.profile)}</h2>
+        <div class="items">${answers.map((v,i)=>`<div class="b${r.top.includes(i+1)?" top":""}" style="height:${(v/7*100).toFixed(0)}%"><span>${v}</span></div>`).join("")}</div>
+        <div class="itemsl">${answers.map((v,i)=>`<span>${i+1}</span>`).join("")}</div>
+        <p class="desc" style="font-size:14px">${esc(r.top.length?B.top(r.top.join(", ")):B.none)}</p></div>
+      <div class="sec"><h2>${esc(u.cal)}</h2><p>${esc(u.calTxt)}</p><p class="note">${esc(u.disc)}</p></div>`;
+    return {html, summary:u.summary(r)};
+  }
+  const setFoot=()=>{document.getElementById("footTxt").textContent=ui(window.ZI18N?window.ZI18N.get():"it").foot;};
+  window.addEventListener("zlangchange",setFoot); setFoot();
+  PSY.mount({code:"AAQ-II",n:7,items:L=>Q.ITEMS[L]||Q.ITEMS.en,labels:L=>Q.SCALE[L]||Q.SCALE.en,ui,score:Q.score,render});
+})();
+</script>
+</body>
+</html>
