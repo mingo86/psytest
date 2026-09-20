@@ -36,6 +36,17 @@
     de: { kind: "Test", badge: "Validiert", start: "Test starten", back: "Zurück", next: "Weiter", finish: "Ergebnis ansehen", close: "Schließen", keys: k => `Tastatur 1-${k}`, resultKicker: "Ergebnis", retake: "Test wiederholen", other: "Weitere Tests", of: "von", whoK: "Wer ihn entwickelt hat", normK: "Mit wem du verglichen wirst", notK: "Was er nicht sagt, und wer ihn kritisiert", sexLab: "Vergleich mit", sexAll: "Alle", sexM: "Männer", sexF: "Frauen", meanOf: {all:"Mittel", m:"Mittel Männer", f:"Mittel Frauen"}, pctOf: p => `höher als ${p} %`, calcK: "So wird ausgewertet", scoreK: "Wert", profK: "Dein Profil", discB: "Werkzeug zur Selbsterkundung, keine Diagnose.", discLink: "Wenn es dir gerade schlecht geht", share: { k: "Teilen", title: "Schick dein Ergebnis", lab: "Der Link stellt genau dein Ergebnis wieder her; deine Antworten werden nirgends gespeichert.", copy: "Link kopieren", copied: "Kopiert!", sys: "Teilen", subject: "Mein Ergebnis auf psytest" }, help: "<b>Wenn es dir gerade schlecht geht</b>Dieser Test ist keine Diagnose. Wenn du daran denkst, dir etwas anzutun, sprich jetzt mit jemandem: in Deutschland <a href=\"tel:08001110111\">Telefonseelsorge 0800 111 0 111</a>, anderswo <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", chips: (n, m) => [`${n} Fragen`, `${m} Min.`, "auf deinem Handy berechnet", "nur du siehst es"], fallback: "Die Fragen werden auf Englisch angezeigt: die Übersetzung in diese Sprache ist noch nicht verfügbar.", instrShort: "Antworte spontan: es gibt keine richtigen oder falschen Antworten." }
   };
 
+  // etichette UI della sezione Approfondimento (contenuti nei file dei test)
+  const APPROF_UI = {
+    it: { approfK: "Approfondimento", approfMore: "Leggi", approfBeyond: "Oltre il riassunto", approfCalib: "Taratura", approfReading: "Letture" },
+    en: { approfK: "In depth", approfMore: "Read", approfBeyond: "Beyond the summary", approfCalib: "Calibration", approfReading: "Reading" },
+    fr: { approfK: "Approfondissement", approfMore: "Lire", approfBeyond: "Au-delà du résumé", approfCalib: "Étalonnage", approfReading: "Lectures" },
+    es: { approfK: "En profundidad", approfMore: "Leer", approfBeyond: "Más allá del resumen", approfCalib: "Calibración", approfReading: "Lecturas" },
+    pt: { approfK: "Aprofundamento", approfMore: "Ler", approfBeyond: "Além do resumo", approfCalib: "Aferição", approfReading: "Leituras" },
+    de: { approfK: "Vertiefung", approfMore: "Lesen", approfBeyond: "Über die Zusammenfassung hinaus", approfCalib: "Einordnung", approfReading: "Lektüre" }
+  };
+  for (const L in COMMON) Object.assign(COMMON[L], APPROF_UI[L] || APPROF_UI.en);
+
   const cdf = z => { const t = 1 / (1 + 0.2316419 * Math.abs(z)); const d = 0.3989423 * Math.exp(-z * z / 2); const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - p : p; };
   function scoreDef(def) {
     return (answers, sex) => {
@@ -121,7 +132,7 @@
     };
     const setFoot = () => { const L = window.ZI18N ? window.ZI18N.get() : "it"; const tx = def.text[L] || def.text.en; document.getElementById("brandSub").textContent = def.code; document.getElementById("footTxt").textContent = T(tx.cite, L); };
     window.addEventListener("zlangchange", setFoot); setFoot();
-    PSY.mount({ code: def.code, n: def.n, order: def.order, sensitive: !!def.sensitive, mascot: pg.mascot || def.mascot, sexNorms: !!def.sexNorms,
+    PSY.mount({ code: def.code, n: def.n, order: def.order, sensitive: !!def.sensitive, mascot: pg.mascot || def.mascot, sexNorms: !!def.sexNorms, approf: def.approf,
       items: L => def.items[L] || def.items.en, labels: L => def.labels[L] || def.labels.en,
       ui, score: def.score || scoreDef(def), render: def.render || renderDef(def) });
   }

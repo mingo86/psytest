@@ -57,6 +57,8 @@
     const ui = () => cfg.ui(langOf());
     let overlay = $("quizOverlay");
     if (!overlay) { overlay = document.createElement("div"); overlay.id = "quizOverlay"; overlay.className = "overlay"; document.body.appendChild(overlay); }
+    let pop = $("glPop");
+    if (!pop) { pop = document.createElement("div"); pop.id = "glPop"; pop.className = "gl-pop"; pop.setAttribute("role", "tooltip"); document.body.appendChild(pop); }
 
     function shareURL() {
       const u = new URL(location.href); const t = u.searchParams.get("t"); u.search = ""; if (t) u.searchParams.set("t", t);
@@ -80,6 +82,41 @@
         <div class="tiles">${u.tiles.map((t, i) => `<div class="tile ${["green", "blue", "yellow"][i % 3]}"><div class="n">${esc(t.n)}</div><p>${t.t}</p></div>`).join("")}</div>
         <p class="disc"><b>${esc(u.discB)}</b> ${u.disc} <a href="#help" id="helpLink">${esc(u.discLink)}</a></p>
         <div class="help" id="help" hidden>${u.help}</div></div>`;
+    // ---- approfondimento (sezione lunga, apribile, con termini a tooltip) ----
+    function approfCard(u) {
+      const A = cfg.approf; if (!A) return "";
+      const a = A[langOf()] || A.it || A.en; if (!a) return "";
+      const blocks = (a.blocks || []).map(b => `<h3>${esc(b.h)}</h3>${b.html}`).join("");
+      const beyond = a.beyond ? `<div class="callout oltre"><div class="ct">${esc(u.approfBeyond)}</div>${a.beyond}</div>` : "";
+      const tar = a.taratura ? `<div class="callout taratura"><div class="ct">${esc(u.approfCalib)}</div>${a.taratura}</div>` : "";
+      const read = (a.reading && a.reading.length) ? `<div class="letture"><div class="ct">${esc(u.approfReading)}</div><ul>${a.reading.map(x => `<li>${x}</li>`).join("")}</ul></div>` : "";
+      return `<details class="card approf"><summary><span class="sm"><span class="k">${esc(u.approfK)}</span><span class="tt">${esc(a.title)}</span></span><span class="more"><span class="mo">${esc(u.approfMore)}</span><span class="ml">${esc(u.close)}</span></span></summary><div class="approf-body">${a.intro || ""}${blocks}${beyond}${tar}${read}</div></details>`;
+    }
+    function wireGloss() {
+      const terms = root.querySelectorAll(".approf .t[data-tip]"); if (!terms.length) return;
+      let curEl = null;
+      const hide = () => { pop.style.display = "none"; if (curEl) { curEl.classList.remove("open"); curEl = null; } };
+      const show = el => {
+        if (curEl) curEl.classList.remove("open"); curEl = el; el.classList.add("open");
+        pop.innerHTML = "<b>" + esc(el.textContent) + "</b>" + esc(el.dataset.tip); pop.style.display = "block";
+        const r = el.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+        let x = r.left + window.scrollX, y = r.bottom + window.scrollY + 6;
+        if (x + pw > window.innerWidth - 10) x = window.innerWidth - pw - 10; if (x < 8) x = 8;
+        if (r.bottom + ph > window.innerHeight - 10) y = r.top + window.scrollY - ph - 6;
+        pop.style.left = x + "px"; pop.style.top = y + "px";
+      };
+      const touch = matchMedia("(hover: none)").matches;
+      terms.forEach(el => {
+        if (touch) { el.addEventListener("click", e => { e.stopPropagation(); curEl === el ? hide() : show(el); }); }
+        else { el.addEventListener("mouseenter", () => show(el)); el.addEventListener("mouseleave", hide); el.tabIndex = 0; el.addEventListener("focus", () => show(el)); el.addEventListener("blur", hide); }
+      });
+      if (!wireGloss._doc) {
+        wireGloss._doc = true;
+        document.addEventListener("click", e => { if (!e.target.closest(".t") && !e.target.closest(".gl-pop")) hide(); });
+        window.addEventListener("scroll", () => { if (pop.style.display === "block") hide(); }, { passive: true });
+      }
+    }
+
     function wireSex() { root.querySelectorAll(".segtoggle button").forEach(b => { b.onclick = () => { sex = b.dataset.g; try { localStorage.setItem("psy_sex", sex); } catch (e) {} if (state === "res") { last = cfg.score(answers, sex); setURL(false); renderResult(false); } else renderIntro(); }; }); }
     function wireHelp() { const l = $("helpLink"); if (l) l.onclick = e => { e.preventDefault(); const h = $("help"); h.hidden = !h.hidden; if (!h.hidden) h.scrollIntoView({ block: "nearest" }); }; }
 
@@ -102,8 +139,9 @@
         </section>
         ${infoCards(u)}
         ${calcCard(u)}
+        ${approfCard(u)}
       </div>`;
-      $("start").onclick = openQuiz; wireHelp(); wireSex();
+      $("start").onclick = openQuiz; wireHelp(); wireSex(); wireGloss();
     }
 
     // ---- finestra ----
@@ -193,9 +231,10 @@
         </div>
         ${infoCards(u)}
         ${calcCard(u)}
+        ${approfCard(u)}
       </div>`;
       if (window.ZI18N) window.ZI18N.decorate();
-      wireHelp(); wireSex();
+      wireHelp(); wireSex(); wireGloss();
       $("btnCopy").onclick = () => {
         const inp = $("shareUrl"); inp.select();
         const done = () => { $("btnCopy").innerHTML = ICON.copy + esc(u.share.copied); setTimeout(() => { $("btnCopy").innerHTML = ICON.copy + esc(u.share.copy); }, 1500); };
