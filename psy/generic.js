@@ -1,15 +1,15 @@
 /* ============================================================
    PSYTEST · GENERIC — pagina test.html?t=<id>
-   Carica tests/<id>.js (window.PSY_TESTS[id]) e monta il motore con
-   un renderer generico: punteggio principale + fascia + scala,
-   profilo per sottoscala, come si legge, citazione.
-   Definizione: { code, theme?, sensitive?, n, reverse?[], order?[],
-     values?[] (valore numerico di ogni opzione; default 1..K),
-     labels:{L:[K]}, items:{L:[n]},
-     text:{L:{kicker,title,lede,meta[],instr,how,cite,foot}},
-     scales:[{key,name:{L},items:[..],mode:"sum"|"mean",range:[min,max],
-              multiply?,desc:{L},bands:[{max,name:{L},text:{L}}]}],
-     main?: key della scala principale (punteggio grande) }
+   Carica tests/<id>.js (window.PSY_TESTS[id]) + tests/pages.js
+   (PSY_PAGES[id]: testi della scheda) e monta il motore.
+   Definizione test: { code, theme?, sensitive?, mascot?, n, reverse?[],
+     order?[], values?[], labels:{L:[K]}, items:{L:[n]},
+     text:{L:{kicker,title,lede,meta[],instr,how,cite}},
+     scales:[{key,name:{L},items,mode:"sum"|"mean",range,multiply?,desc:{L},
+              bands:[{max,name:{L},text:{L}}]}], main?, pick?,
+     score?(answers), render?(res,L,answers) — custom (ECR-R, AAQ-II) }
+   Scheda (pages.js): { tags:{L:[]}, deco, mascot, who:{L}, norm:{L},
+     not:{L}, calc:{L}, tiles:[{n,t:{L}}] }
    Lingue: IT + EN obbligatorie; le altre ricadono su EN.
    ============================================================ */
 (function () {
@@ -18,12 +18,22 @@
   const fmt = (x, L) => (Number.isInteger(x) ? String(x) : x.toFixed(2).replace(".", L === "en" ? "." : ","));
 
   const COMMON = {
-    it: { start: "Inizia il test", privacy: "Le risposte esistono solo nel link che deciderai di condividere.", qn: (i, n) => `Domanda ${i} di ${n}`, back: "Indietro", next: "Avanti", finish: "Vedi il risultato", keys: "Da tastiera: numeri per rispondere, frecce per spostarti.", resultKicker: "Il tuo risultato", retake: "Rifai il test", other: "Altri test", of: "su", how: "Come si legge", scales: "Il profilo", share: { title: "Condividi il tuo risultato", lab: "Il link ricostruisce esattamente il tuo risultato.", copy: "Copia link", copied: "Copiato!", sys: "Condividi", subject: "Il mio risultato su psytest" }, help: "<b>Se stai male adesso</b>Questo test non è una diagnosi e non sostituisce un colloquio. Se hai pensieri di farti del male, parla subito con qualcuno: in Italia <a href=\"tel:0223272327\">Telefono Amico 02 2327 2327</a> (tutti i giorni 10–24) o il <a href=\"tel:112\">112</a>; altrove <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "strumento di auto-esplorazione, non una diagnosi", fallback: "Le domande sono mostrate in inglese: la traduzione in questa lingua non è ancora disponibile." },
-    en: { start: "Start the test", privacy: "Your answers exist only in the link you decide to share.", qn: (i, n) => `Question ${i} of ${n}`, back: "Back", next: "Next", finish: "See your result", keys: "Keyboard: numbers to answer, arrows to move.", resultKicker: "Your result", retake: "Retake the test", other: "Other tests", of: "out of", how: "How to read it", scales: "Your profile", share: { title: "Share your result", lab: "The link rebuilds exactly your result.", copy: "Copy link", copied: "Copied!", sys: "Share", subject: "My result on psytest" }, help: "<b>If you are struggling right now</b>This test is not a diagnosis and does not replace talking to someone. If you have thoughts of harming yourself, reach out now: in the US/Canada call or text <a href=\"tel:988\">988</a>, in the UK <a href=\"tel:116123\">Samaritans 116 123</a>, elsewhere <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "a self-exploration tool, not a diagnosis", fallback: "" },
-    fr: { start: "Commencer le test", privacy: "Tes réponses n'existent que dans le lien que tu décideras de partager.", qn: (i, n) => `Question ${i} sur ${n}`, back: "Retour", next: "Suivant", finish: "Voir le résultat", keys: "Clavier : chiffres pour répondre, flèches pour naviguer.", resultKicker: "Ton résultat", retake: "Refaire le test", other: "Autres tests", of: "sur", how: "Comment le lire", scales: "Ton profil", share: { title: "Partage ton résultat", lab: "Le lien reconstruit exactement ton résultat.", copy: "Copier le lien", copied: "Copié !", sys: "Partager", subject: "Mon résultat sur psytest" }, help: "<b>Si tu vas mal en ce moment</b>Ce test n'est pas un diagnostic. Si tu as des pensées de te faire du mal, parle à quelqu'un maintenant : en France <a href=\"tel:3114\">3114</a>, ailleurs <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "outil d'auto-exploration, pas un diagnostic", fallback: "Les questions sont affichées en anglais : la traduction dans cette langue n'est pas encore disponible." },
-    es: { start: "Empezar el test", privacy: "Tus respuestas existen solo en el enlace que decidas compartir.", qn: (i, n) => `Pregunta ${i} de ${n}`, back: "Atrás", next: "Siguiente", finish: "Ver el resultado", keys: "Teclado: números para responder, flechas para moverte.", resultKicker: "Tu resultado", retake: "Repetir el test", other: "Otros tests", of: "de", how: "Cómo leerlo", scales: "Tu perfil", share: { title: "Comparte tu resultado", lab: "El enlace reconstruye exactamente tu resultado.", copy: "Copiar enlace", copied: "¡Copiado!", sys: "Compartir", subject: "Mi resultado en psytest" }, help: "<b>Si estás mal ahora mismo</b>Este test no es un diagnóstico. Si tienes pensamientos de hacerte daño, habla con alguien ahora: en España <a href=\"tel:024\">024</a>, en otros países <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "herramienta de autoexploración, no un diagnóstico", fallback: "Las preguntas se muestran en inglés: la traducción a este idioma aún no está disponible." },
-    pt: { start: "Começar o teste", privacy: "Suas respostas existem só no link que você decidir compartilhar.", qn: (i, n) => `Pergunta ${i} de ${n}`, back: "Voltar", next: "Próxima", finish: "Ver o resultado", keys: "Teclado: números para responder, setas para navegar.", resultKicker: "Seu resultado", retake: "Refazer o teste", other: "Outros testes", of: "de", how: "Como ler", scales: "Seu perfil", share: { title: "Compartilhe seu resultado", lab: "O link reconstrói exatamente o seu resultado.", copy: "Copiar link", copied: "Copiado!", sys: "Compartilhar", subject: "Meu resultado no psytest" }, help: "<b>Se você está mal agora</b>Este teste não é um diagnóstico. Se tem pensamentos de se machucar, fale com alguém agora: no Brasil <a href=\"tel:188\">CVV 188</a>, em outros países <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "ferramenta de autoexploração, não um diagnóstico", fallback: "As perguntas são mostradas em inglês: a tradução para este idioma ainda não está disponível." },
-    de: { start: "Test starten", privacy: "Deine Antworten existieren nur im Link, den du teilen möchtest.", qn: (i, n) => `Frage ${i} von ${n}`, back: "Zurück", next: "Weiter", finish: "Ergebnis ansehen", keys: "Tastatur: Zahlen zum Antworten, Pfeile zum Navigieren.", resultKicker: "Dein Ergebnis", retake: "Test wiederholen", other: "Weitere Tests", of: "von", how: "So liest du es", scales: "Dein Profil", share: { title: "Teile dein Ergebnis", lab: "Der Link stellt genau dein Ergebnis wieder her.", copy: "Link kopieren", copied: "Kopiert!", sys: "Teilen", subject: "Mein Ergebnis auf psytest" }, help: "<b>Wenn es dir gerade schlecht geht</b>Dieser Test ist keine Diagnose. Wenn du daran denkst, dir etwas anzutun, sprich jetzt mit jemandem: in Deutschland <a href=\"tel:08001110111\">Telefonseelsorge 0800 111 0 111</a>, anderswo <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", foot: "Werkzeug zur Selbsterkundung, keine Diagnose", fallback: "Die Fragen werden auf Englisch angezeigt: die Übersetzung in diese Sprache ist noch nicht verfügbar." }
+    it: { kind: "Test", badge: "Validato", start: "Inizia il test", back: "Indietro", next: "Avanti", finish: "Vedi il risultato", close: "Chiudi", keys: k => `tastiera 1-${k}`, resultKicker: "Risultato", retake: "Rifai il test", other: "Altri test", of: "su",
+      whoK: "Chi l'ha costruito", normK: "Con chi ti confronti", notK: "Cosa non dice", calcK: "Come si calcola", scoreK: "Punteggio", profK: "Il profilo",
+      discB: "Strumento di auto-esplorazione, non una diagnosi.", discLink: "Se stai male adesso",
+      share: { k: "Condividi", title: "Manda il tuo risultato", lab: "Il link ricostruisce esattamente il tuo risultato; le risposte non vengono salvate da nessuna parte.", copy: "Copia link", copied: "Copiato!", sys: "Condividi", subject: "Il mio risultato su psytest" },
+      help: "<b>Se stai male adesso</b>Questo test non è una diagnosi e non sostituisce un colloquio. Se hai pensieri di farti del male, parla subito con qualcuno: in Italia <a href=\"tel:0223272327\">Telefono Amico 02 2327 2327</a> (tutti i giorni 10–24) o il <a href=\"tel:112\">112</a>; altrove <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.",
+      chips: (n, m) => [`${n} domande`, `${m} min`, "calcolato sul telefono", "solo tu lo vedi"], fallback: "Le domande sono mostrate in inglese: la traduzione in questa lingua non è ancora disponibile.", instrShort: "Rispondi d'istinto: non ci sono risposte giuste o sbagliate." },
+    en: { kind: "Test", badge: "Validated", start: "Start the test", back: "Back", next: "Next", finish: "See your result", close: "Close", keys: k => `keyboard 1-${k}`, resultKicker: "Result", retake: "Retake the test", other: "Other tests", of: "out of",
+      whoK: "Who built it", normK: "Who you are compared with", notK: "What it doesn't say", calcK: "How it is scored", scoreK: "Score", profK: "Your profile",
+      discB: "A self-exploration tool, not a diagnosis.", discLink: "If you are struggling right now",
+      share: { k: "Share", title: "Send your result", lab: "The link rebuilds exactly your result; your answers are not stored anywhere.", copy: "Copy link", copied: "Copied!", sys: "Share", subject: "My result on psytest" },
+      help: "<b>If you are struggling right now</b>This test is not a diagnosis and does not replace talking to someone. If you have thoughts of harming yourself, reach out now: in the US/Canada call or text <a href=\"tel:988\">988</a>, in the UK <a href=\"tel:116123\">Samaritans 116 123</a>, elsewhere <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.",
+      chips: (n, m) => [`${n} questions`, `${m} min`, "scored on your phone", "only you see it"], fallback: "", instrShort: "Answer instinctively: there are no right or wrong answers." },
+    fr: { kind: "Test", badge: "Validé", start: "Commencer le test", back: "Retour", next: "Suivant", finish: "Voir le résultat", close: "Fermer", keys: k => `clavier 1-${k}`, resultKicker: "Résultat", retake: "Refaire le test", other: "Autres tests", of: "sur", whoK: "Qui l'a construit", normK: "À qui tu te compares", notK: "Ce qu'il ne dit pas", calcK: "Comment c'est calculé", scoreK: "Score", profK: "Ton profil", discB: "Outil d'auto-exploration, pas un diagnostic.", discLink: "Si tu vas mal en ce moment", share: { k: "Partager", title: "Envoie ton résultat", lab: "Le lien reconstruit exactement ton résultat ; tes réponses ne sont enregistrées nulle part.", copy: "Copier le lien", copied: "Copié !", sys: "Partager", subject: "Mon résultat sur psytest" }, help: "<b>Si tu vas mal en ce moment</b>Ce test n'est pas un diagnostic. Si tu as des pensées de te faire du mal, parle à quelqu'un maintenant : en France <a href=\"tel:3114\">3114</a>, ailleurs <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", chips: (n, m) => [`${n} questions`, `${m} min`, "calculé sur ton téléphone", "toi seul le vois"], fallback: "Les questions sont affichées en anglais : la traduction dans cette langue n'est pas encore disponible.", instrShort: "Réponds d'instinct : il n'y a pas de bonne ou de mauvaise réponse." },
+    es: { kind: "Test", badge: "Validado", start: "Empezar el test", back: "Atrás", next: "Siguiente", finish: "Ver el resultado", close: "Cerrar", keys: k => `teclado 1-${k}`, resultKicker: "Resultado", retake: "Repetir el test", other: "Otros tests", of: "de", whoK: "Quién lo construyó", normK: "Con quién te comparas", notK: "Lo que no dice", calcK: "Cómo se calcula", scoreK: "Puntuación", profK: "Tu perfil", discB: "Herramienta de autoexploración, no un diagnóstico.", discLink: "Si estás mal ahora mismo", share: { k: "Compartir", title: "Envía tu resultado", lab: "El enlace reconstruye exactamente tu resultado; tus respuestas no se guardan en ningún sitio.", copy: "Copiar enlace", copied: "¡Copiado!", sys: "Compartir", subject: "Mi resultado en psytest" }, help: "<b>Si estás mal ahora mismo</b>Este test no es un diagnóstico. Si tienes pensamientos de hacerte daño, habla con alguien ahora: en España <a href=\"tel:024\">024</a>, en otros países <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", chips: (n, m) => [`${n} preguntas`, `${m} min`, "calculado en tu teléfono", "solo tú lo ves"], fallback: "Las preguntas se muestran en inglés: la traducción a este idioma aún no está disponible.", instrShort: "Responde por instinto: no hay respuestas correctas o incorrectas." },
+    pt: { kind: "Teste", badge: "Validado", start: "Começar o teste", back: "Voltar", next: "Próxima", finish: "Ver o resultado", close: "Fechar", keys: k => `teclado 1-${k}`, resultKicker: "Resultado", retake: "Refazer o teste", other: "Outros testes", of: "de", whoK: "Quem construiu", normK: "Com quem você se compara", notK: "O que ele não diz", calcK: "Como é calculado", scoreK: "Pontuação", profK: "Seu perfil", discB: "Ferramenta de autoexploração, não um diagnóstico.", discLink: "Se você está mal agora", share: { k: "Compartilhar", title: "Envie seu resultado", lab: "O link reconstrói exatamente o seu resultado; suas respostas não ficam salvas em lugar nenhum.", copy: "Copiar link", copied: "Copiado!", sys: "Compartilhar", subject: "Meu resultado no psytest" }, help: "<b>Se você está mal agora</b>Este teste não é um diagnóstico. Se tem pensamentos de se machucar, fale com alguém agora: no Brasil <a href=\"tel:188\">CVV 188</a>, em outros países <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", chips: (n, m) => [`${n} perguntas`, `${m} min`, "calculado no seu celular", "só você vê"], fallback: "As perguntas são mostradas em inglês: a tradução para este idioma ainda não está disponível.", instrShort: "Responda por instinto: não há respostas certas ou erradas." },
+    de: { kind: "Test", badge: "Validiert", start: "Test starten", back: "Zurück", next: "Weiter", finish: "Ergebnis ansehen", close: "Schließen", keys: k => `Tastatur 1-${k}`, resultKicker: "Ergebnis", retake: "Test wiederholen", other: "Weitere Tests", of: "von", whoK: "Wer ihn entwickelt hat", normK: "Mit wem du verglichen wirst", notK: "Was er nicht sagt", calcK: "So wird ausgewertet", scoreK: "Wert", profK: "Dein Profil", discB: "Werkzeug zur Selbsterkundung, keine Diagnose.", discLink: "Wenn es dir gerade schlecht geht", share: { k: "Teilen", title: "Schick dein Ergebnis", lab: "Der Link stellt genau dein Ergebnis wieder her; deine Antworten werden nirgends gespeichert.", copy: "Link kopieren", copied: "Kopiert!", sys: "Teilen", subject: "Mein Ergebnis auf psytest" }, help: "<b>Wenn es dir gerade schlecht geht</b>Dieser Test ist keine Diagnose. Wenn du daran denkst, dir etwas anzutun, sprich jetzt mit jemandem: in Deutschland <a href=\"tel:08001110111\">Telefonseelsorge 0800 111 0 111</a>, anderswo <a href=\"https://findahelpline.com\" target=\"_blank\" rel=\"noopener\">findahelpline.com</a>.", chips: (n, m) => [`${n} Fragen`, `${m} Min.`, "auf deinem Handy berechnet", "nur du siehst es"], fallback: "Die Fragen werden auf Englisch angezeigt: die Übersetzung in diese Sprache ist noch nicht verfügbar.", instrShort: "Antworte spontan: es gibt keine richtigen oder falschen Antworten." }
   };
 
   function scoreDef(def) {
@@ -46,67 +56,76 @@
     };
   }
 
+  const scaleBar = (m, s) => {
+    const bands = s.bands || [], pos = (Math.max(0, Math.min(1, m.pct)) * 100).toFixed(1) + "%";
+    const cols = ["var(--green)", "var(--lilac)", "var(--yellow)", "var(--pink)", "#f5b3c0"];
+    const grad = bands.length ? `background:linear-gradient(90deg,${bands.map((b, i) => { const a = i === 0 ? 0 : (bands[i - 1].max - s.range[0]) / (s.range[1] - s.range[0]) * 100; const e = Math.min(100, (b.max - s.range[0]) / (s.range[1] - s.range[0]) * 100); return `${cols[Math.min(i, 4)]} ${a.toFixed(1)}% ${e.toFixed(1)}%`; }).join(",")})` : "";
+    return `<div class="scale" style="${grad}"><em style="left:${pos}"></em></div><div class="scale-l"><span>${s.range[0]}</span><span>${s.range[1]}</span></div>`;
+  };
+
   function renderDef(def) {
     return (r, L) => {
       const c = COMMON[L] || COMMON.it, tx = def.text[L] || def.text.en;
       const main = def.main ? def.scales.find(s => s.key === def.main) : null;
-      let html = `<h1 style="margin:14px 0 4px">${esc(T(tx.title, L))}</h1>`, summary = T(tx.title, L) + ": ";
+      let html = "", summary = T(tx.title, L) + ": ", headline = null, sub = null;
       if (main) {
-        const m = r.scales[main.key], pos = (Math.max(0, Math.min(1, m.pct)) * 100).toFixed(1) + "%";
-        const bands = main.bands || [];
-        html += `<div class="big-score"><span class="n">${fmt(m.raw, L)}</span><span class="of">${esc(c.of)} ${main.range[1]}</span></div>` +
-          (m.band ? `<p class="band">${esc(T(m.band.name, L))}</p>` : "") +
-          `<div class="scale" style="background:linear-gradient(90deg,${bands.map((b, i) => { const a = i === 0 ? 0 : (bands[i - 1].max - main.range[0]) / (main.range[1] - main.range[0]) * 100; const e = Math.min(100, (b.max - main.range[0]) / (main.range[1] - main.range[0]) * 100); const col = ["var(--acc-l)", "var(--soft)", "#fde68a", "#fca5a5", "#f87171"][Math.min(i, 4)]; return `${col} ${a.toFixed(1)}% ${e.toFixed(1)}%`; }).join(",")})"><em style="left:${pos}"></em></div>` +
-          `<div class="scale-l"><span>${main.range[0]}</span><span>${main.range[1]}</span></div>` +
-          (bands.length ? `<div class="bands" style="grid-template-columns:repeat(${Math.min(bands.length, 4)},1fr)">${bands.map(b => `<span${m.band === b ? ' class="on"' : ""}>${esc(T(b.name, L))}</span>`).join("")}</div>` : "") +
-          (m.band ? `<p class="desc">${esc(T(m.band.text, L))}</p>` : "") +
-          (main.desc ? `<p class="desc" style="font-size:14px">${esc(T(main.desc, L))}</p>` : "");
+        const m = r.scales[main.key], bands = main.bands || [];
+        headline = m.band ? T(m.band.name, L) : null; sub = m.band ? T(m.band.text, L) : null;
+        html += `<div class="card"><div class="k">${esc(c.scoreK)} · ${esc(T(main.name, L))}</div>
+          <div class="score"><div class="bign">${fmt(m.raw, L)}<small>${esc(c.of)} ${main.range[1]}</small></div>
+            <div>${m.band ? `<p class="bandname">${esc(T(m.band.name, L))}</p><p class="bandtxt">${esc(T(m.band.text, L))}</p>` : ""}</div></div>
+          ${scaleBar(m, main)}
+          ${bands.length ? `<div class="bands" style="grid-template-columns:repeat(${Math.min(bands.length, 4)},1fr)">${bands.map(b => `<span${m.band === b ? ' class="on"' : ""}>${esc(T(b.name, L))}</span>`).join("")}</div>` : ""}
+          ${main.desc ? `<p class="desc">${esc(T(main.desc, L))}</p>` : ""}</div>`;
         summary += `${fmt(m.raw, L)}/${main.range[1]}` + (m.band ? ` — ${T(m.band.name, L)}` : "");
       }
       if (def.pick) {
         const top = def.scales.reduce((a, s) => r.scales[s.key].raw > r.scales[a.key].raw ? s : a, def.scales[0]);
         const ties = def.scales.filter(s => r.scales[s.key].raw === r.scales[top.key].raw);
-        html += `<p class="style" style="margin-top:14px">${ties.map(s => esc(T(s.name, L))).join(" / ")}<small>${ties.map(s => esc(T(s.desc, L))).join(" · ")}</small></p>`;
-        summary += ties.map(s => T(s.name, L)).join(" / ");
+        headline = ties.map(s => T(s.name, L)).join(" / "); sub = ties.map(s => T(s.desc, L)).join(" · ");
+        summary += headline;
       }
       const others = def.scales.filter(s => !main || s.key !== main.key);
       if (others.length) {
-        html += `<div class="sec"><h2>${esc(c.scales)}</h2><div class="prof">` + others.map(s => {
+        html += `<div class="card"><div class="k">${esc(c.profK)}</div><div class="dims">` + others.map(s => {
           const m = r.scales[s.key];
-          return `<div class="dim"><div class="h"><span>${esc(T(s.name, L))}</span><span>${fmt(m.raw, L)} / ${s.range[1]}</span></div><div class="bar" style="margin-bottom:8px"><i style="width:${(Math.max(0, Math.min(1, m.pct)) * 100).toFixed(1)}%"></i></div>` +
+          return `<div class="dim${m.band ? "" : " nolab"}"><div class="h"><span>${esc(T(s.name, L))}</span><span>${fmt(m.raw, L)} / ${s.range[1]}</span></div><div class="bar"><i style="width:${(Math.max(0, Math.min(1, m.pct)) * 100).toFixed(1)}%"></i></div>` +
             (m.band ? `<p class="bandl">${esc(T(m.band.name, L))}</p>` : "") +
             `<p class="t">${esc(m.band ? T(m.band.text, L) : T(s.desc, L))}</p></div>`;
         }).join("") + `</div></div>`;
-        if (!main) summary += others.map(s => `${T(s.name, L)} ${fmt(r.scales[s.key].raw, L)}` + (r.scales[s.key].band ? ` (${T(r.scales[s.key].band.name, L)})` : "")).join(", ");
+        if (!main && !def.pick) summary += others.map(s => `${T(s.name, L)} ${fmt(r.scales[s.key].raw, L)}` + (r.scales[s.key].band ? ` (${T(r.scales[s.key].band.name, L)})` : "")).join(", ");
       }
-      html += `<div class="sec"><h2>${esc(c.how)}</h2><p>${esc(T(tx.how, L))}</p><p class="note">${esc(T(tx.cite, L))}</p></div>`;
-      return { html, summary };
+      return { html, summary, headline, sub };
     };
   }
 
   function boot() {
     const id = new URLSearchParams(location.search).get("t");
     const def = window.PSY_TESTS && window.PSY_TESTS[id];
-    if (!def) { document.getElementById("app").innerHTML = '<div class="card"><h1>psytest</h1><p class="lede">Test non trovato.</p><a class="btn" href="index.html">Home</a></div>'; return; }
+    const pg = (window.PSY_PAGES && window.PSY_PAGES[id]) || {};
+    if (!def) { document.getElementById("app").innerHTML = '<section class="hero"><div><h1>psytest</h1><p class="lede">Test non trovato.</p><a class="btn" href="index.html">Home</a></div></section>'; return; }
     if (def.theme) document.body.dataset.theme = def.theme;
     const ui = L => {
-      const c = COMMON[L] || COMMON.it, tx = def.text[L] || def.text.en;
-      const hasItems = !!def.items[L];
+      const c = COMMON[L] || COMMON.it, tx = def.text[L] || def.text.en, hasItems = !!def.items[L];
+      const mins = (tx.meta || def.text.en.meta || []).find(x => /min/i.test(x)) || "";
       return Object.assign({}, c, {
-        kicker: T(tx.kicker, L), title: T(tx.title, L), lede: T(tx.lede, L), meta: tx.meta || def.text.en.meta,
-        instr: T(tx.instr, L) + (!hasItems && c.fallback ? `<br><br><i>${c.fallback}</i>` : ""),
-        share: Object.assign({}, c.share, { subject: T(tx.title, L) + " · psytest" }), foot: c.foot
+        title: T(tx.title, L), lede: T(tx.lede, L), tags: T(pg.tags, L) || [], deco: pg.deco, chips: c.chips(def.n, (mins.match(/\d+/) || ["2"])[0]),
+        who: T(pg.who, L) || T(tx.cite, L), norm: T(pg.norm, L) || "", not: T(pg.not, L) || "", calc: T(pg.calc, L) || T(tx.how, L).split(". ")[0] + ".", tiles: (pg.tiles || []).map(t => ({ n: t.n, t: T(t.t, L) })),
+        disc: T(tx.how, L) + (!hasItems && c.fallback ? ` <i>${c.fallback}</i>` : ""), instrShort: T(tx.instr, L).replace(/<[^>]+>/g, "").split(". ").slice(-1)[0] || c.instrShort,
+        share: Object.assign({}, c.share, { subject: T(tx.title, L) + " · psytest" })
       });
     };
-    const setBrand = () => { const L = window.ZI18N ? window.ZI18N.get() : "it"; const tx = def.text[L] || def.text.en; document.getElementById("brandSub").textContent = T(tx.kicker, L); document.getElementById("footTxt").textContent = `${def.code} · ${(COMMON[L] || COMMON.it).foot}`; };
-    window.addEventListener("zlangchange", setBrand); setBrand();
-    PSY.mount({ code: def.code, n: def.n, order: def.order, sensitive: !!def.sensitive,
+    const setFoot = () => { const L = window.ZI18N ? window.ZI18N.get() : "it"; const tx = def.text[L] || def.text.en; document.getElementById("brandSub").textContent = def.code; document.getElementById("footTxt").textContent = T(tx.cite, L); };
+    window.addEventListener("zlangchange", setFoot); setFoot();
+    PSY.mount({ code: def.code, n: def.n, order: def.order, sensitive: !!def.sensitive, mascot: pg.mascot || def.mascot,
       items: L => def.items[L] || def.items.en, labels: L => def.labels[L] || def.labels.en,
-      ui, score: scoreDef(def), render: renderDef(def) });
+      ui, score: def.score || scoreDef(def), render: def.render || renderDef(def) });
   }
 
   const id = new URLSearchParams(location.search).get("t");
+  window.PSY_GEN = { COMMON, T, fmt, scaleBar };
   if (id && /^[a-z0-9-]+$/.test(id)) {
-    const s = document.createElement("script"); s.src = "tests/" + id + ".js"; s.onload = boot; s.onerror = boot; document.head.appendChild(s);
+    let left = 2; const done = () => { if (--left === 0) boot(); };
+    for (const src of ["tests/" + id + ".js", "tests/pages.js"]) { const s = document.createElement("script"); s.src = src; s.onload = done; s.onerror = done; document.head.appendChild(s); }
   } else boot();
 })();

@@ -8,37 +8,40 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,700..900,0..100&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="psy/app.css">
 </head>
 <body>
 <div class="top"><a class="brand" href="index.html">psytest</a><span id="langPick"></span></div>
-<div class="hero"><h1 id="title"></h1><p id="lede"></p></div>
+<main class="wrap">
+<section class="hub-hero"><div><div class="k" style="color:rgba(255,255,255,.85)">psytest</div><h1 id="title"></h1><p id="lede"></p></div><div id="hubMascot"></div></section>
 <div id="groups"></div>
-<section class="how"><div class="card"><h2 id="howT"></h2><ol id="how"></ol></div></section>
+<div class="card"><div class="k" id="howK"></div><h2 id="howT"></h2><div class="tiles" id="how"></div></div>
 <p class="foot" id="foot"></p>
+</main>
 
 <script src="lang/i18n.js"></script>
+<script src="psy/app.js"></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
   const UI={
     it:{title:"Test psicologici, fatti bene",lede:"Strumenti validati dalla ricerca, con le domande originali e il punteggio ufficiale. Tutto calcolato sul tuo telefono, risultato condivisibile con un link.",start:"Inizia",q:"domande",min:"min",
-      howT:"Come funziona",how:["Ogni test è il questionario completo, nella forma e con lo scoring pubblicati dagli autori; il confronto è con i campioni di riferimento della letteratura.","Tutto viene calcolato sul tuo dispositivo: nessun account, nessun invio. Le risposte esistono solo nel link che scegli di creare alla fine, e quel link ricostruisce esattamente il risultato.","Sono strumenti di auto-esplorazione, non diagnosi. Se un risultato ti pesa, parlarne con un professionista è la mossa sensata."],
+      howK:"In tre righe",screen:"screening",howT:"Come funziona",how:["Ogni test è il questionario completo, nella forma e con lo scoring pubblicati dagli autori; il confronto è con i campioni di riferimento della letteratura.","Tutto viene calcolato sul tuo dispositivo: nessun account, nessun invio. Le risposte esistono solo nel link che scegli di creare alla fine, e quel link ricostruisce esattamente il risultato.","Sono strumenti di auto-esplorazione, non diagnosi. Se un risultato ti pesa, parlarne con un professionista è la mossa sensata."],
       foot:"Tutti gli strumenti sono di pubblico dominio o liberi per uso non commerciale, citati in ogni pagina. Le versioni italiane sono quelle validate dove esistono (AAQ-II, PHQ-9, GAD-7, WHO-5, RSES, SWLS, PSS-10, ERQ, CFQ) e traduzioni proprie altrove; FR/ES/PT/DE sono disponibili per ECR-R e AAQ-II, gli altri test mostrano le domande in inglese."},
     en:{title:"Psychological tests, done properly",lede:"Research-validated instruments with the original questions and official scoring. Everything computed on your phone, result shareable with a link.",start:"Start",q:"questions",min:"min",
-      howT:"How it works",how:["Each test is the complete questionnaire, in the form and with the scoring published by its authors; the comparison is with the reference samples in the literature.","Everything is computed on your device: no account, nothing sent. Your answers exist only in the link you choose to create at the end, and that link rebuilds the exact result.","These are self-exploration tools, not diagnoses. If a result weighs on you, talking to a professional is the sensible move."],
+      howK:"In three lines",screen:"screening",howT:"How it works",how:["Each test is the complete questionnaire, in the form and with the scoring published by its authors; the comparison is with the reference samples in the literature.","Everything is computed on your device: no account, nothing sent. Your answers exist only in the link you choose to create at the end, and that link rebuilds the exact result.","These are self-exploration tools, not diagnoses. If a result weighs on you, talking to a professional is the sensible move."],
       foot:"All instruments are public domain or free for non-commercial use, cited on each page. Italian versions are the validated ones where they exist and our own translations elsewhere; FR/ES/PT/DE are available for ECR-R and AAQ-II, the other tests show questions in English."},
-    fr:{title:"Des tests psychologiques, faits comme il faut",lede:"Des outils validés par la recherche, avec les questions originales et le score officiel. Tout est calculé sur ton téléphone, résultat partageable par un lien.",start:"Commencer",q:"questions",min:"min",howT:"Comment ça marche",how:["Chaque test est le questionnaire complet, dans la forme et avec le score publiés par ses auteurs.","Tout est calculé sur ton appareil : pas de compte, rien d'envoyé. Tes réponses n'existent que dans le lien que tu choisis de créer à la fin.","Ce sont des outils d'auto-exploration, pas des diagnostics. Si un résultat te pèse, en parler à un professionnel est la démarche sensée."],foot:"Instruments du domaine public ou libres pour usage non commercial, cités sur chaque page. FR disponible pour ECR-R et AAQ-II ; les autres tests affichent les questions en anglais."},
-    es:{title:"Tests psicológicos, hechos como es debido",lede:"Instrumentos validados por la investigación, con las preguntas originales y la puntuación oficial. Todo se calcula en tu teléfono, resultado compartible con un enlace.",start:"Empezar",q:"preguntas",min:"min",howT:"Cómo funciona",how:["Cada test es el cuestionario completo, en la forma y con la puntuación publicadas por sus autores.","Todo se calcula en tu dispositivo: sin cuenta, sin envíos. Tus respuestas existen solo en el enlace que decidas crear al final.","Son herramientas de autoexploración, no diagnósticos. Si un resultado te pesa, hablarlo con un profesional es lo sensato."],foot:"Instrumentos de dominio público o libres para uso no comercial, citados en cada página. ES disponible para ECR-R y AAQ-II; los demás tests muestran las preguntas en inglés."},
-    pt:{title:"Testes psicológicos, feitos como se deve",lede:"Instrumentos validados pela pesquisa, com as perguntas originais e a pontuação oficial. Tudo calculado no seu celular, resultado compartilhável por link.",start:"Começar",q:"perguntas",min:"min",howT:"Como funciona",how:["Cada teste é o questionário completo, na forma e com a pontuação publicadas pelos autores.","Tudo é calculado no seu dispositivo: sem conta, sem envio. Suas respostas existem só no link que você escolher criar no fim.","São ferramentas de autoexploração, não diagnósticos. Se um resultado pesa, conversar com um profissional é o passo sensato."],foot:"Instrumentos de domínio público ou livres para uso não comercial, citados em cada página. PT disponível para ECR-R e AAQ-II; os outros testes mostram as perguntas em inglês."},
-    de:{title:"Psychologische Tests, richtig gemacht",lede:"Von der Forschung validierte Instrumente mit den Originalfragen und der offiziellen Auswertung. Alles auf deinem Handy berechnet, Ergebnis per Link teilbar.",start:"Starten",q:"Fragen",min:"Min.",howT:"So funktioniert es",how:["Jeder Test ist der vollständige Fragebogen, in der Form und mit der Auswertung, die die Autoren veröffentlicht haben.","Alles wird auf deinem Gerät berechnet: kein Konto, nichts wird gesendet. Deine Antworten existieren nur im Link, den du am Ende erstellen möchtest.","Das sind Werkzeuge zur Selbsterkundung, keine Diagnosen. Wenn dich ein Ergebnis belastet, ist ein Gespräch mit einer Fachperson der vernünftige Schritt."],foot:"Gemeinfreie oder für nicht-kommerzielle Nutzung freie Instrumente, auf jeder Seite zitiert. DE verfügbar für ECR-R und AAQ-II; die anderen Tests zeigen die Fragen auf Englisch."}
+    fr:{title:"Des tests psychologiques, faits comme il faut",lede:"Des outils validés par la recherche, avec les questions originales et le score officiel. Tout est calculé sur ton téléphone, résultat partageable par un lien.",start:"Commencer",q:"questions",min:"min",howK:"En trois lignes",screen:"dépistage",howT:"Comment ça marche",how:["Chaque test est le questionnaire complet, dans la forme et avec le score publiés par ses auteurs.","Tout est calculé sur ton appareil : pas de compte, rien d'envoyé. Tes réponses n'existent que dans le lien que tu choisis de créer à la fin.","Ce sont des outils d'auto-exploration, pas des diagnostics. Si un résultat te pèse, en parler à un professionnel est la démarche sensée."],foot:"Instruments du domaine public ou libres pour usage non commercial, cités sur chaque page. FR disponible pour ECR-R et AAQ-II ; les autres tests affichent les questions en anglais."},
+    es:{title:"Tests psicológicos, hechos como es debido",lede:"Instrumentos validados por la investigación, con las preguntas originales y la puntuación oficial. Todo se calcula en tu teléfono, resultado compartible con un enlace.",start:"Empezar",q:"preguntas",min:"min",howK:"En tres líneas",screen:"cribado",howT:"Cómo funciona",how:["Cada test es el cuestionario completo, en la forma y con la puntuación publicadas por sus autores.","Todo se calcula en tu dispositivo: sin cuenta, sin envíos. Tus respuestas existen solo en el enlace que decidas crear al final.","Son herramientas de autoexploración, no diagnósticos. Si un resultado te pesa, hablarlo con un profesional es lo sensato."],foot:"Instrumentos de dominio público o libres para uso no comercial, citados en cada página. ES disponible para ECR-R y AAQ-II; los demás tests muestran las preguntas en inglés."},
+    pt:{title:"Testes psicológicos, feitos como se deve",lede:"Instrumentos validados pela pesquisa, com as perguntas originais e a pontuação oficial. Tudo calculado no seu celular, resultado compartilhável por link.",start:"Começar",q:"perguntas",min:"min",howK:"Em três linhas",screen:"triagem",howT:"Como funciona",how:["Cada teste é o questionário completo, na forma e com a pontuação publicadas pelos autores.","Tudo é calculado no seu dispositivo: sem conta, sem envio. Suas respostas existem só no link que você escolher criar no fim.","São ferramentas de autoexploração, não diagnósticos. Se um resultado pesa, conversar com um profissional é o passo sensato."],foot:"Instrumentos de domínio público ou livres para uso não comercial, citados em cada página. PT disponível para ECR-R e AAQ-II; os outros testes mostram as perguntas em inglês."},
+    de:{title:"Psychologische Tests, richtig gemacht",lede:"Von der Forschung validierte Instrumente mit den Originalfragen und der offiziellen Auswertung. Alles auf deinem Handy berechnet, Ergebnis per Link teilbar.",start:"Starten",q:"Fragen",min:"Min.",howK:"In drei Zeilen",screen:"Screening",howT:"So funktioniert es",how:["Jeder Test ist der vollständige Fragebogen, in der Form und mit der Auswertung, die die Autoren veröffentlicht haben.","Alles wird auf deinem Gerät berechnet: kein Konto, nichts wird gesendet. Deine Antworten existieren nur im Link, den du am Ende erstellen möchtest.","Das sind Werkzeuge zur Selbsterkundung, keine Diagnosen. Wenn dich ein Ergebnis belastet, ist ein Gespräch mit einer Fachperson der vernünftige Schritt."],foot:"Gemeinfreie oder für nicht-kommerzielle Nutzung freie Instrumente, auf jeder Seite zitiert. DE verfügbar für ECR-R und AAQ-II; die anderen Tests zeigen die Fragen auf Englisch."}
   };
   // registro dei test: h = pagina, n = domande, m = minuti
   const REG={
     it:[
       {h:"Relazioni ed emozioni",sub:"Come ami, come gestisci quello che provi, come ti tratti.",tests:[
-        {h:"ecr-r.html",k:"ECR-R · Attaccamento",t:"Come ami, davvero?",d:"Ansia ed evitamento nelle relazioni, con la mappa dei quattro profili. Il test di riferimento.",n:36,m:6},
+        {h:"test.html?t=ecrr",k:"ECR-R · Attaccamento",t:"Come ami, davvero?",d:"Ansia ed evitamento nelle relazioni, con la mappa dei quattro profili. Il test di riferimento.",n:36,m:6},
         {h:"test.html?t=rq",k:"RQ · Attaccamento in 4 profili",t:"Quale descrizione ti somiglia?",d:"Le quattro descrizioni di Bartholomew: il complemento veloce dell'ECR-R.",n:4,m:1},
         {h:"test.html?t=erq",k:"ERQ · Regolazione emotiva",t:"Come gestisci le emozioni?",d:"Rivalutazione o soppressione: le due strategie di Gross.",n:10,m:2,theme:"rose"},
         {h:"test.html?t=scssf",k:"SCS-SF · Auto-compassione",t:"Come ti tratti quando sbagli?",d:"Gentilezza, umanità condivisa e presenza mentale, contro autocritica e isolamento.",n:12,m:2,theme:"rose"},
@@ -50,19 +53,19 @@
         {h:"test.html?t=rses",k:"RSES · Autostima",t:"Quanto ti stimi?",d:"La scala di Rosenberg, la misura di autostima più usata al mondo.",n:10,m:1,theme:"sun"},
         {h:"test.html?t=olbi",k:"OLBI · Burnout",t:"Quanto ti sta consumando il lavoro?",d:"Esaurimento e disimpegno: le due facce del burnout.",n:16,m:3,theme:"ocean"}]},
       {h:"Mente e personalità",sub:"Come funzionano i tuoi pensieri e chi sei, in tratti.",tests:[
-        {h:"aaq-ii.html",k:"AAQ-II · Flessibilità",t:"Quanto ti pesano le emozioni?",d:"L'evitamento esperienziale del modello ACT, con le soglie di ricerca.",n:7,m:2,theme:"teal"},
+        {h:"test.html?t=aaq",k:"AAQ-II · Flessibilità",t:"Quanto ti pesano le emozioni?",d:"L'evitamento esperienziale del modello ACT, con le soglie di ricerca.",n:7,m:2,theme:"teal"},
         {h:"test.html?t=cfq",k:"CFQ · Fusione cognitiva",t:"Quanto ti credono i tuoi pensieri?",d:"Quanto resti intrappolato nei pensieri: il gemello dell'AAQ-II.",n:7,m:1,theme:"teal"},
         {h:"test.html?t=miniipip",k:"Mini-IPIP · Big Five",t:"Che personalità hai?",d:"I cinque grandi tratti in 20 domande di pubblico dominio.",n:20,m:3,theme:"plum"},
         {h:"test.html?t=sd3",k:"SD3 · Triade oscura",t:"Quanto sei «oscuro»?",d:"Machiavellismo, narcisismo e psicopatia, in versione non clinica.",n:27,m:4,theme:"slate"},
         {h:"test.html?t=ips",k:"IPS · Procrastinazione",t:"Quanto rimandi?",d:"La procrastinazione irrazionale secondo Piers Steel.",n:9,m:1,theme:"plum"}]},
       {h:"Umore e ansia · screening",sub:"Questionari usati dai medici per capire se vale la pena parlarne. Non sono diagnosi; se stai male, chiedi aiuto oggi.",tests:[
-        {h:"test.html?t=phq9",k:"PHQ-9 · Umore",t:"Come va l'umore, nelle ultime due settimane?",d:"Lo screening per la depressione più usato nella medicina di base.",n:9,m:2,theme:"slate"},
-        {h:"test.html?t=gad7",k:"GAD-7 · Ansia",t:"Quanta ansia, nelle ultime due settimane?",d:"Lo screening per l'ansia generalizzata usato in tutto il mondo.",n:7,m:1,theme:"slate"},
-        {h:"test.html?t=dass21",k:"DASS-21 · Tre scale",t:"Com'è andata l'ultima settimana?",d:"Depressione, ansia e stress con le soglie di gravità pubblicate.",n:21,m:4,theme:"slate"}]}
+        {h:"test.html?t=phq9",k:"PHQ-9 · Umore",t:"Come va l'umore, nelle ultime due settimane?",d:"Lo screening per la depressione più usato nella medicina di base.",n:9,m:2,warn:1,theme:"slate"},
+        {h:"test.html?t=gad7",k:"GAD-7 · Ansia",t:"Quanta ansia, nelle ultime due settimane?",d:"Lo screening per l'ansia generalizzata usato in tutto il mondo.",n:7,m:1,warn:1,theme:"slate"},
+        {h:"test.html?t=dass21",k:"DASS-21 · Tre scale",t:"Com'è andata l'ultima settimana?",d:"Depressione, ansia e stress con le soglie di gravità pubblicate.",n:21,m:4,warn:1,theme:"slate"}]}
     ],
     en:[
       {h:"Relationships and emotions",sub:"How you love, how you handle what you feel, how you treat yourself.",tests:[
-        {h:"ecr-r.html",k:"ECR-R · Attachment",t:"How do you really love?",d:"Anxiety and avoidance in relationships, with the map of the four profiles. The reference test.",n:36,m:6},
+        {h:"test.html?t=ecrr",k:"ECR-R · Attachment",t:"How do you really love?",d:"Anxiety and avoidance in relationships, with the map of the four profiles. The reference test.",n:36,m:6},
         {h:"test.html?t=rq",k:"RQ · Attachment in 4 profiles",t:"Which description sounds like you?",d:"Bartholomew's four descriptions: the quick companion to the ECR-R.",n:4,m:1},
         {h:"test.html?t=erq",k:"ERQ · Emotion regulation",t:"How do you handle your emotions?",d:"Reappraisal or suppression: Gross's two strategies.",n:10,m:2,theme:"rose"},
         {h:"test.html?t=scssf",k:"SCS-SF · Self-compassion",t:"How do you treat yourself when you fail?",d:"Kindness, common humanity and mindfulness, versus self-judgement and isolation.",n:12,m:2,theme:"rose"},
@@ -74,23 +77,24 @@
         {h:"test.html?t=rses",k:"RSES · Self-esteem",t:"How much do you value yourself?",d:"The Rosenberg scale, the most used measure of self-esteem.",n:10,m:1,theme:"sun"},
         {h:"test.html?t=olbi",k:"OLBI · Burnout",t:"How much is work wearing you down?",d:"Exhaustion and disengagement: the two faces of burnout.",n:16,m:3,theme:"ocean"}]},
       {h:"Mind and personality",sub:"How your thoughts work and who you are, in traits.",tests:[
-        {h:"aaq-ii.html",k:"AAQ-II · Flexibility",t:"How much do your emotions weigh on you?",d:"Experiential avoidance from the ACT model, with research thresholds.",n:7,m:2,theme:"teal"},
+        {h:"test.html?t=aaq",k:"AAQ-II · Flexibility",t:"How much do your emotions weigh on you?",d:"Experiential avoidance from the ACT model, with research thresholds.",n:7,m:2,theme:"teal"},
         {h:"test.html?t=cfq",k:"CFQ · Cognitive fusion",t:"How much do your thoughts run you?",d:"How entangled you get in your thoughts: the AAQ-II's twin.",n:7,m:1,theme:"teal"},
         {h:"test.html?t=miniipip",k:"Mini-IPIP · Big Five",t:"What is your personality like?",d:"The five big traits in 20 public-domain questions.",n:20,m:3,theme:"plum"},
         {h:"test.html?t=sd3",k:"SD3 · Dark triad",t:"How “dark” are you?",d:"Machiavellianism, narcissism and psychopathy, non-clinical version.",n:27,m:4,theme:"slate"},
         {h:"test.html?t=ips",k:"IPS · Procrastination",t:"How much do you put things off?",d:"Irrational procrastination after Piers Steel.",n:9,m:1,theme:"plum"}]},
       {h:"Mood and anxiety · screening",sub:"Questionnaires clinicians use to see whether it is worth talking about. Not diagnoses; if you are struggling, ask for help today.",tests:[
-        {h:"test.html?t=phq9",k:"PHQ-9 · Mood",t:"How has your mood been, over the last two weeks?",d:"The most used depression screening in primary care.",n:9,m:2,theme:"slate"},
-        {h:"test.html?t=gad7",k:"GAD-7 · Anxiety",t:"How anxious, over the last two weeks?",d:"The generalised-anxiety screening used worldwide.",n:7,m:1,theme:"slate"},
-        {h:"test.html?t=dass21",k:"DASS-21 · Three scales",t:"How was the past week?",d:"Depression, anxiety and stress with published severity thresholds.",n:21,m:4,theme:"slate"}]}
+        {h:"test.html?t=phq9",k:"PHQ-9 · Mood",t:"How has your mood been, over the last two weeks?",d:"The most used depression screening in primary care.",n:9,m:2,warn:1,theme:"slate"},
+        {h:"test.html?t=gad7",k:"GAD-7 · Anxiety",t:"How anxious, over the last two weeks?",d:"The generalised-anxiety screening used worldwide.",n:7,m:1,warn:1,theme:"slate"},
+        {h:"test.html?t=dass21",k:"DASS-21 · Three scales",t:"How was the past week?",d:"Depression, anxiety and stress with published severity thresholds.",n:21,m:4,warn:1,theme:"slate"}]}
     ]
   };
   function render(){
     const L=window.ZI18N?window.ZI18N.get():"it", u=UI[L]||UI.it, reg=REG[L]||REG.en;
     document.documentElement.lang=L;
     $("title").textContent=u.title; $("lede").textContent=u.lede;
-    $("groups").innerHTML=reg.map(g=>`<section class="group"><h2>${g.h}</h2><p class="gsub">${g.sub}</p><div class="tests three">${g.tests.map(t=>`<a class="card" href="${t.h}"${t.theme?` data-theme="${t.theme}"`:""} style="text-decoration:none;color:inherit"><span class="kicker">${t.k}</span><h2>${t.t}</h2><p>${t.d}</p><div class="meta"><span>${t.n} ${u.q}</span><span>~${t.m} ${u.min}</span></div><span class="btn">${u.start} →</span></a>`).join("")}</div></section>`).join("");
-    $("howT").textContent=u.howT; $("how").innerHTML=u.how.map(p=>`<li>${p}</li>`).join("");
+    $("groups").innerHTML=reg.map(g=>`<section class="group"><div class="gh"><h2>${g.h}</h2></div><p class="gsub">${g.sub}</p><div class="tests">${g.tests.map(t=>`<a class="tc" href="${t.h}"${t.theme?` data-theme="${t.theme}"`:""}><div class="k"><i></i>${t.k}</div><h3>${t.t}</h3><p>${t.d}</p><div class="meta"><span>${t.n} ${u.q}</span><span>~${t.m} ${u.min}</span>${t.warn?`<span class="warn">${u.screen}</span>`:""}</div><div class="go">${u.start} →</div></a>`).join("")}</div></section>`).join("");
+    $("hubMascot").innerHTML=PSY.mascot("smile");
+    $("howK").textContent=u.howK; $("howT").textContent=u.howT; $("how").innerHTML=u.how.map((p,i)=>`<div class="tile ${["green","blue","yellow"][i%3]}"><div class="n">${i+1}</div><p>${p}</p></div>`).join("");
     $("foot").textContent=u.foot;
     if(window.ZI18N) window.ZI18N.decorate();
   }
