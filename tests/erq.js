@@ -1,7 +1,8 @@
 /* Emotion Regulation Questionnaire (Gross & John 2003) — libero per uso non commerciale. IT: Balzarotti, John & Gross (2010). */
 window.PSY_TESTS = window.PSY_TESTS || {};
 PSY_TESTS.erq = {
-  code: "ERQ", theme: "rose", n: 10,
+  code: "ERQ", theme: "rose", n: 10, sexNorms: true,
+  norms: { reap: { all: { m: 4.61, sd: 0.94 }, m: { m: 4.60, sd: 0.94 }, f: { m: 4.61, sd: 0.95 } }, supp: { all: { m: 3.31, sd: 1.17 }, m: { m: 3.64, sd: 1.11 }, f: { m: 3.14, sd: 1.18 } } },
   labels: {
     en: ["Strongly disagree", "Disagree", "Somewhat disagree", "Neutral", "Somewhat agree", "Agree", "Strongly agree"],
     it: ["Fortemente in disaccordo", "In disaccordo", "Un po' in disaccordo", "Neutrale", "Un po' d'accordo", "D'accordo", "Fortemente d'accordo"]

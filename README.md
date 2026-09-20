@@ -4,7 +4,7 @@ Sito statico a sé (non linkato dallo Zodiac né dall'Ologenetica): un **plico d
 
 ## Pagine
 - `index.html` — hub a gruppi: Relazioni ed emozioni · Benessere e stress · Mente e personalità · Umore e ansia (screening)
-- `test.html?t=<id>` — pagina di ogni test (definizione in `tests/<id>.js`, scheda in `tests/pages.js`): ecrr, aaq (render dedicati, 6 lingue), rq, erq, scssf, ucla3, who5, swls, pss10, rses, olbi, cfq, miniipip, sd3, ips, phq9, gad7, dass21
+- `test.html?t=<id>` — pagina di ogni test (definizione in `tests/<id>.js`, scheda in `tests/pages.js`): ecrr, aaq (render dedicati, 6 lingue), maas, ffmq15, rq, erq, scssf, ucla3, who5, swls, pss10, rses, olbi, cfq, miniipip, sd3, ips, phq9, gad7, dass21
 
 Ogni risultato ha il box **«Condividi il tuo risultato»**: `?r=<cifre>&run=1&lang=xx` (più `t=` per i test generici) ricostruisce esattamente il risultato; copia link, condivisione di sistema, WhatsApp, Telegram, email. I test di screening (PHQ-9, GAD-7, DASS-21) mostrano un box di aiuto con numeri utili.
 

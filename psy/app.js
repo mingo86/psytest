@@ -50,6 +50,9 @@
     const ORDER = cfg.order || Array.from({ length: N }, (_, i) => i + 1);
     const answers = new Array(N).fill(0);
     let state = "intro", pos = 0, last = null;
+    // confronto per sesso (solo se il test ha norme separate): url ?g=m|f > localStorage > tutti
+    let sex = "all"; try { const g = new URLSearchParams(location.search).get("g"); sex = (g === "m" || g === "f") ? g : (localStorage.getItem("psy_sex") || "all"); } catch (e) {}
+    if (!cfg.sexNorms) sex = "all";
     const root = $("app");
     const ui = () => cfg.ui(langOf());
     let overlay = $("quizOverlay");
@@ -57,7 +60,7 @@
 
     function shareURL() {
       const u = new URL(location.href); const t = u.searchParams.get("t"); u.search = ""; if (t) u.searchParams.set("t", t);
-      u.searchParams.set("r", answers.join("")); u.searchParams.set("run", "1"); u.searchParams.set("lang", langOf());
+      u.searchParams.set("r", answers.join("")); u.searchParams.set("run", "1"); u.searchParams.set("lang", langOf()); if (cfg.sexNorms && sex !== "all") u.searchParams.set("g", sex);
       return u.href;
     }
     function setURL(clear) {
@@ -70,13 +73,14 @@
     // blocchi condivisi della pagina
     const infoCards = u => `<div class="cards3">
         <div class="pc lilac"><div class="ico">${DECO.dna}</div><div class="k">${esc(u.whoK)}</div><p>${u.who}</p></div>
-        <div class="pc yellow"><div class="ico">${DECO.compass}</div><div class="k">${esc(u.normK)}</div><p>${u.norm}</p></div>
+        <div class="pc yellow"><div class="ico">${DECO.compass}</div><div class="k">${esc(u.normK)}</div><p>${u.norm}</p>${cfg.sexNorms ? `<div class="segtoggle" role="radiogroup" aria-label="${esc(u.sexLab)}"><span class="sl">${esc(u.sexLab)}</span>${[["all", u.sexAll], ["m", u.sexM], ["f", u.sexF]].map(([g, t]) => `<button type="button" role="radio" aria-checked="${sex === g}" class="${sex === g ? "on" : ""}" data-g="${g}">${esc(t)}</button>`).join("")}</div>` : ""}</div>
         <div class="pc pink"><div class="ico">${DECO.cloud}</div><div class="k">${esc(u.notK)}</div><p>${u.not}</p></div>
       </div>`;
     const calcCard = u => `<div class="card"><div class="k">${esc(u.calcK)}</div><h2>${u.calc}</h2>
         <div class="tiles">${u.tiles.map((t, i) => `<div class="tile ${["green", "blue", "yellow"][i % 3]}"><div class="n">${esc(t.n)}</div><p>${t.t}</p></div>`).join("")}</div>
         <p class="disc"><b>${esc(u.discB)}</b> ${u.disc} <a href="#help" id="helpLink">${esc(u.discLink)}</a></p>
         <div class="help" id="help" hidden>${u.help}</div></div>`;
+    function wireSex() { root.querySelectorAll(".segtoggle button").forEach(b => { b.onclick = () => { sex = b.dataset.g; try { localStorage.setItem("psy_sex", sex); } catch (e) {} if (state === "res") { last = cfg.score(answers, sex); setURL(false); renderResult(false); } else renderIntro(); }; }); }
     function wireHelp() { const l = $("helpLink"); if (l) l.onclick = e => { e.preventDefault(); const h = $("help"); h.hidden = !h.hidden; if (!h.hidden) h.scrollIntoView({ block: "nearest" }); }; }
 
     function renderIntro() {
@@ -99,7 +103,7 @@
         ${infoCards(u)}
         ${calcCard(u)}
       </div>`;
-      $("start").onclick = openQuiz; wireHelp();
+      $("start").onclick = openQuiz; wireHelp(); wireSex();
     }
 
     // ---- finestra ----
@@ -155,11 +159,11 @@
 
     // ---- risultato ----
     function showResult(animate) {
-      last = cfg.score(answers); state = "res"; setURL(false);
+      last = cfg.score(answers, sex); state = "res"; setURL(false);
       renderResult(animate); window.scrollTo({ top: 0, behavior: animate ? "smooth" : "auto" });
     }
     function renderResult(animate) {
-      const L = langOf(), u = ui(), out = cfg.render(last, L, answers), url = shareURL();
+      const L = langOf(), u = ui(), out = cfg.render(last, L, answers, sex), url = shareURL();
       const msg = out.summary + "\n" + url, enc = encodeURIComponent;
       root.innerHTML = `<div class="${animate ? "fade" : ""}">
         <section class="hero res-hero">
@@ -191,7 +195,7 @@
         ${calcCard(u)}
       </div>`;
       if (window.ZI18N) window.ZI18N.decorate();
-      wireHelp();
+      wireHelp(); wireSex();
       $("btnCopy").onclick = () => {
         const inp = $("shareUrl"); inp.select();
         const done = () => { $("btnCopy").innerHTML = ICON.copy + esc(u.share.copied); setTimeout(() => { $("btnCopy").innerHTML = ICON.copy + esc(u.share.copy); }, 1500); };
@@ -214,7 +218,7 @@
     const K = cfg.labels(langOf()).length;
     if (r && new RegExp("^[1-" + K + "]{" + N + "}$").test(r)) {
       for (let i = 0; i < N; i++) answers[i] = +r[i];
-      if (sp.get("run") === "1") { last = cfg.score(answers); state = "res"; }
+      if (sp.get("run") === "1") { last = cfg.score(answers, sex); state = "res"; }
     }
     applyLang();
   }

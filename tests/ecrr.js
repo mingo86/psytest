@@ -392,7 +392,9 @@
   }
 
   // answers: array di 36 numeri 1..7 (indice 0 = item 1)
-  function score(answers){
+  const NORMS_SEX = { all: NORMS, m: { anx:{m:3.57, sd:1.10}, avo:{m:2.94, sd:1.13} }, f: { anx:{m:3.56, sd:1.13}, avo:{m:2.92, sd:1.21} } };
+  function score(answers, sex){
+    const N = NORMS_SEX[sex] || NORMS;
     let anx=0, avo=0;
     for(let i=0;i<36;i++){
       const n=i+1; let v=answers[i];
@@ -400,15 +402,15 @@
       if(n<=18) anx+=v; else avo+=v;
     }
     anx/=18; avo/=18;
-    const za=(anx-NORMS.anx.m)/NORMS.anx.sd, zv=(avo-NORMS.avo.m)/NORMS.avo.sd;
+    const za=(anx-N.anx.m)/N.anx.sd, zv=(avo-N.avo.m)/N.avo.sd;
     const band=z=>z<-0.5?"low":(z>0.5?"high":"mid");
-    const hiA=anx>=NORMS.anx.m, hiV=avo>=NORMS.avo.m;
+    const hiA=anx>=N.anx.m, hiV=avo>=N.avo.m;
     const style = !hiA&&!hiV ? "secure" : (hiA&&!hiV ? "preoccupied" : (!hiA&&hiV ? "dismissing" : "fearful"));
     const pct=z=>Math.min(99,Math.max(1,Math.round(cdf(z)*100)));
-    return {anx, avo, za, zv, pA:pct(za), pV:pct(zv), bandA:band(za), bandV:band(zv), style};
+    return {anx, avo, za, zv, pA:pct(za), pV:pct(zv), bandA:band(za), bandV:band(zv), style, norms:N};
   }
 
-  window.ATTACH = { ITEMS, STYLES, BANDS, NORMS, REVERSE, score };
+  window.ATTACH = { ITEMS, STYLES, BANDS, NORMS, NORMS_SEX, REVERSE, score };
 })();
 
 /* ---- definizione per test.html?t=ecrr (render dedicato) ---- */
@@ -422,7 +424,7 @@
   const mp=v=>((v-1)/6*100).toFixed(1)+"%";
   function mapSVG(r,L,u){
     const S=A.STYLES[L]||A.STYLES.en; const W=300,P=26; const sc=v=>(v-1)/6*(W-2*P);
-    const x=P+sc(r.anx), y=W-P-sc(r.avo), mx=P+sc(A.NORMS.anx.m), my=W-P-sc(A.NORMS.avo.m);
+    const x=P+sc(r.anx), y=W-P-sc(r.avo), mx=P+sc(r.norms.anx.m), my=W-P-sc(r.norms.avo.m);
     let g=""; for(let v=2;v<7;v++){const t=P+sc(v); g+=`<line x1="${t}" y1="${P}" x2="${t}" y2="${W-P}"/><line x1="${P}" y1="${t}" x2="${W-P}" y2="${t}"/>`;}
     const q=(k,x0,y0,x1,y1)=>`<rect class="quad${r.style===k?" on":""}" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" rx="10"/>`;
     const lab=(k,x,y,a)=>`<text class="qlab${r.style===k?" on":""}" x="${x}" y="${y}" text-anchor="${a}">${esc(S[k].n)}</text>`;
@@ -445,8 +447,8 @@
           <div><p class="bandname">${esc(S.n)} · ${esc(S.tag)}</p><p class="bandtxt">${esc(S.desc)}</p>
           <div class="chipsrow"><span class="p">${esc(u.anx)} ${fmt(r.anx,L)}</span><span>${esc(u.avo)} ${fmt(r.avo,L)}</span><span class="p">${esc(u.pct(r.pA))}</span><span>${esc(u.pct(r.pV))}</span></div></div></div></div>
       <div class="card"><div class="k">${esc(u.dims)}</div><div class="dims">
-        <div class="dim"><div class="h"><span>${esc(u.anx)}</span><span>${fmt(r.anx,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.anx)}"></i><em style="left:${mp(A.NORMS.anx.m)}" data-l="${esc(u.mean)} ${fmt(A.NORMS.anx.m,L)}"></em></div><p class="t" style="margin-top:22px">${esc(Bd.anx[r.bandA])}</p></div>
-        <div class="dim"><div class="h"><span>${esc(u.avo)}</span><span>${fmt(r.avo,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.avo)}"></i><em style="left:${mp(A.NORMS.avo.m)}" data-l="${esc(u.mean)} ${fmt(A.NORMS.avo.m,L)}"></em></div><p class="t" style="margin-top:22px">${esc(Bd.avo[r.bandV])}</p></div>
+        <div class="dim"><div class="h"><span>${esc(u.anx)}</span><span>${fmt(r.anx,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.anx)}"></i><em style="left:${mp(r.norms.anx.m)}" data-l="${esc(u.mean)} ${fmt(r.norms.anx.m,L)}"></em></div><p class="t" style="margin-top:22px">${esc(Bd.anx[r.bandA])}</p></div>
+        <div class="dim"><div class="h"><span>${esc(u.avo)}</span><span>${fmt(r.avo,L)} / 7</span></div><div class="bar"><i style="width:${mp(r.avo)}"></i><em style="left:${mp(r.norms.avo.m)}" data-l="${esc(u.mean)} ${fmt(r.norms.avo.m,L)}"></em></div><p class="t" style="margin-top:22px">${esc(Bd.avo[r.bandV])}</p></div>
       </div></div>
       <div class="card"><div class="k">${esc(u.mapT)}</div><div class="map">${mapSVG(r,L,u)}<div class="legend">
         ${["secure","preoccupied","dismissing","fearful"].map(k=>`<div class="r"><b>${esc(ST[k].n)}</b><span>${esc(ST[k].tag)}</span></div>`).join("")}<p>${u.mapTxt}</p></div></div></div>
@@ -454,5 +456,5 @@
     return {html, summary:u.summary(S,r,L), headline:S.n, sub:S.tag+" — "+S.desc};
   }
   window.PSY_TESTS=window.PSY_TESTS||{};
-  PSY_TESTS.ecrr={code:"ECR-R",n:36,order:ORDER,labels:LABELS,items:A.ITEMS,text:TEXT,scales:[],score:A.score,render};
+  PSY_TESTS.ecrr={code:"ECR-R",n:36,sexNorms:true,order:ORDER,labels:LABELS,items:A.ITEMS,text:TEXT,scales:[],score:A.score,render};
 })();
